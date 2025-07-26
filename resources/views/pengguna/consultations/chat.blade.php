@@ -4,5 +4,5 @@
 @section('page-title', 'Chat Konsultasi')
 
 @section('content')
-    <livewire:live-chat :consultationId="$consultation->id" />
+    <livewire:live-chat :consultation-id="$consultation->id" />
 @endsection

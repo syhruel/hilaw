@@ -1,5 +1,5 @@
 <?php
-
+// RegisteredUserController.php - FIXED
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
@@ -27,30 +27,62 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        \Log::info('=== REGISTRATION START ===', [
+            'email' => $request->email,
+            'role' => $request->role
+        ]);
+
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'role' => ['required', 'in:pengguna,dokter'],
         ]);
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'role' => 'pengguna', 
+            'role' => $request->role,
+            'is_approved' => $request->role === 'dokter' ? false : true,
+        ]);
+
+        \Log::info('User created', [
+            'user_id' => $user->id,
+            'role' => $user->role,
+            'is_approved' => $user->is_approved
         ]);
 
         event(new Registered($user));
-
         Auth::login($user);
+
+        \Log::info('User logged in', [
+            'auth_check' => auth()->check(),
+            'auth_user_id' => auth()->id()
+        ]);
+
         if ($user->role === 'pengguna') {
-            return redirect()->route('pengguna.dashboard');
-        } elseif ($user->role === 'dokter') {
-            return redirect()->route('dokter.dashboard');
-        } elseif ($user->role === 'admin') {
-            return redirect()->route('admin.dashboard');
+            \Log::info('=== REDIRECTING PENGGUNA ===');
+            return redirect()->route('pengguna.dashboard')->with('success', 'Registrasi berhasil!');
+        }
+        
+        if ($user->role === 'dokter' && !$user->is_approved) {
+            \Log::info('=== REDIRECTING DOKTER TO PENDING ===');
+            return redirect()->route('dokter.pending.simple')
+                ->with('success', 'Registrasi berhasil! Akun Anda sedang menunggu persetujuan admin.');
+        }
+        
+        if ($user->role === 'dokter' && $user->is_approved) {
+            \Log::info('=== REDIRECTING APPROVED DOKTER ===');
+            return redirect()->route('dokter.dashboard')->with('success', 'Registrasi berhasil!');
+        }
+        
+        if ($user->role === 'admin') {
+            \Log::info('=== REDIRECTING ADMIN ===');
+            return redirect()->route('admin.dashboard')->with('success', 'Registrasi berhasil!');
         }
 
+        \Log::warning('=== FALLBACK REDIRECT ===', ['role' => $user->role]);
         return redirect('/dashboard');
     }
 }

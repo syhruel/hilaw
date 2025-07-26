@@ -1,618 +1,738 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
+
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>HILAW - Hukum Indonesia Layanan Warga</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        .hero-section {
-            background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
-            color: white;
-            padding: 5rem 0;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
+    <title>Gardener - Gardening Website Template</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
 
-        .hero-section::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M30 20h40v60h-40z" fill="rgba(255,255,255,0.05)"/><path d="M25 25h50v50h-50z" fill="rgba(255,255,255,0.03)"/></svg>');
-            opacity: 0.1;
-        }
+    <!-- Favicon -->
+    <link href="{{ asset('template/img/favicon.ico') }}" rel="icon">
 
-        .hero-title {
-            font-size: 3rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-            position: relative;
-            z-index: 1;
-        }
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jost:wght@500;600;700&family=Open+Sans:wght@400;500&display=swap" rel="stylesheet">  
 
-        .hero-subtitle {
-            font-size: 1.2rem;
-            margin-bottom: 2rem;
-            opacity: 0.9;
-            position: relative;
-            z-index: 1;
-        }
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
 
-        .role-card {
-            background: white;
-            border: 1px solid #e9ecef;
-            border-radius: 12px;
-            padding: 2rem;
-            text-align: center;
-            transition: all 0.3s ease;
-            height: 100%;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            cursor: pointer;
-        }
+    <!-- Libraries Stylesheet -->
+    <link href="{{ asset('template/lib/animate/animate.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('template/lib/owlcarousel/assets/owl.carousel.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('template/lib/lightbox/css/lightbox.min.css') }}" rel="stylesheet">
 
-        .role-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-        }
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="{{ asset('template/css/bootstrap.min.css') }}" rel="stylesheet">
 
-        .role-icon {
-            font-size: 3rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .role-title {
-            font-size: 1.4rem;
-            font-weight: 600;
-            color: #1e40af;
-            margin-bottom: 1rem;
-        }
-
-        .role-description {
-            color: #666;
-            line-height: 1.6;
-        }
-
-        .feature-card {
-            background: white;
-            border-radius: 12px;
-            padding: 2rem;
-            text-align: center;
-            transition: all 0.3s ease;
-            border: 1px solid #e9ecef;
-            margin-bottom: 2rem;
-        }
-
-        .feature-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-        }
-
-        .feature-icon {
-            font-size: 2.5rem;
-            color: #1e40af;
-            margin-bottom: 1rem;
-        }
-
-        .feature-title {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: #1e40af;
-            margin-bottom: 1rem;
-        }
-
-        .cta-section {
-            padding: 3rem 0;
-            background: #1e40af;
-            color: white;
-            text-align: center;
-        }
-
-        /* Lawyer Card Styles */
-        .lawyer-card {
-            background: white;
-            border-radius: 15px;
-            padding: 2rem;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-            transition: all 0.3s ease;
-            border: 1px solid #e9ecef;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .lawyer-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
-        }
-
-        .lawyer-photo {
-            width: 100%;
-            height: 180px;
-            object-fit: cover;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            margin-bottom: 15px;
-        }
-
-        .lawyer-name {
-            font-size: 1.3rem;
-            font-weight: 600;
-            color: #1e40af;
-            margin-bottom: 0.5rem;
-        }
-
-        .lawyer-specialty {
-            color: #666;
-            font-size: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        .lawyer-university {
-            color: #888;
-            font-size: 0.9rem;
-            margin-bottom: 1rem;
-        }
-
-        .lawyer-experience {
-            color: #666;
-            font-size: 0.9rem;
-            margin-bottom: 1rem;
-            display: -webkit-box;
-            -webkit-line-clamp: 3;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-
-        .lawyer-price {
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: #1e40af;
-            margin-bottom: 1.5rem;
-        }
-
-        .online-status {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            padding: 0.3rem 0.8rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 500;
-        }
-
-        .online-status.online {
-            background: #d4edda;
-            color: #155724;
-        }
-
-        .online-status.offline {
-            background: #f8d7da;
-            color: #721c24;
-        }
-
-        .btn-consult {
-            background: #1e40af;
-            color: white;
-            border: none;
-            padding: 0.6rem 1.5rem;
-            border-radius: 25px;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            display: inline-block;
-            margin-right: 0.5rem;
-        }
-
-        .btn-consult:hover {
-            background: #1e3a8a;
-            color: white;
-            transform: translateY(-2px);
-        }
-
-        .btn-show {
-            background: #6c757d;
-            color: white;
-            border: none;
-            padding: 0.6rem 1.5rem;
-            border-radius: 25px;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            display: inline-block;
-        }
-
-        .btn-show:hover {
-            background: #5a6268;
-            color: white;
-            transform: translateY(-2px);
-        }
-
-        .navbar-brand {
-            color: #1e40af !important;
-        }
-
-        .text-primary-custom {
-            color: #1e40af !important;
-        }
-
-        .bg-primary-custom {
-            background-color: #1e40af !important;
-        }
-
-        .btn-primary-custom {
-            background-color: #1e40af;
-            border-color: #1e40af;
-        }
-
-        .btn-primary-custom:hover {
-            background-color: #1e3a8a;
-            border-color: #1e3a8a;
-        }
-
-        @media (max-width: 768px) {
-            .hero-title {
-                font-size: 2.2rem;
-            }
-            
-            .hero-subtitle {
-                font-size: 1rem;
-            }
-
-            .lawyer-card {
-                padding: 1.5rem;
-            }
-
-            .lawyer-photo {
-                width: 100px;
-                height: 100px;
-            }
-        }
-    </style>
+    <!-- Template Stylesheet -->
+    <link href="{{ asset('template/css/style.css') }}" rel="stylesheet">
 </head>
+
 <body>
-    <!-- Navbar Dashboard Style -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top shadow-sm">
-        <div class="container">
-            <a class="navbar-brand fw-bold text-primary-custom fs-4" href="/">
-                <i class="fas fa-balance-scale me-2"></i>HILAW
-            </a>
-            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto me-3">
-                    <li class="nav-item">
-                        <a class="nav-link px-3 py-2 rounded mx-1" href="#beranda">
-                            Beranda
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link px-3 py-2 rounded mx-1" href="#advokat">
-                           Advokat Online
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link px-3 py-2 rounded mx-1" href="#" onclick="redirectToLogin()">
-                           Konsultasi Saya
-                        </a>
-                    </li>
-                </ul>
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link px-3 py-2 rounded mx-1" href="/login">
-                            <i class="fas fa-sign-in-alt me-1"></i>Login
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link px-3 py-2 rounded mx-1" href="/register">
-                            <i class="fas fa-user-plus me-1"></i>Daftar
-                        </a>
-                    </li>
-                </ul>
+    <!-- Spinner Start -->
+    <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+        <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;"></div>
+    </div>
+    <!-- Spinner End -->
+
+
+    <!-- Topbar Start -->
+    <div class="container-fluid bg-dark text-light px-0 py-2">
+        <div class="row gx-0 d-none d-lg-flex">
+            <div class="col-lg-7 px-5 text-start">
+                <div class="h-100 d-inline-flex align-items-center me-4">
+                    <span class="fa fa-phone-alt me-2"></span>
+                    <span>+012 345 6789</span>
+                </div>
+                <div class="h-100 d-inline-flex align-items-center">
+                    <span class="far fa-envelope me-2"></span>
+                    <span>info@example.com</span>
+                </div>
             </div>
+            <div class="col-lg-5 px-5 text-end">
+                <div class="h-100 d-inline-flex align-items-center mx-n2">
+                    <span>Follow Us:</span>
+                    <a class="btn btn-link text-light" href=""><i class="fab fa-facebook-f"></i></a>
+                    <a class="btn btn-link text-light" href=""><i class="fab fa-twitter"></i></a>
+                    <a class="btn btn-link text-light" href=""><i class="fab fa-linkedin-in"></i></a>
+                    <a class="btn btn-link text-light" href=""><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Topbar End -->
+
+
+    <!-- Navbar Start -->
+    <nav class="navbar navbar-expand-lg bg-white navbar-light sticky-top p-0">
+        <a href="{{ url('/') }}" class="navbar-brand d-flex align-items-center px-4 px-lg-5">
+            <h1 class="m-0">Hilaw</h1>
+        </a>
+        <button type="button" class="navbar-toggler me-4" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <div class="navbar-nav ms-auto p-4 p-lg-0">
+                <a href="{{ url('/') }}" class="nav-item nav-link {{ Request::is('/') ? 'active' : '' }}">Home</a>
+                <a href="{{ url('/about') }}" class="nav-item nav-link {{ Request::is('about') ? 'active' : '' }}">About</a>
+                <a href="{{ url('/services') }}" class="nav-item nav-link {{ Request::is('services') ? 'active' : '' }}">Services</a>
+                <a href="{{ url('/projects') }}" class="nav-item nav-link {{ Request::is('projects') ? 'active' : '' }}">Projects</a>
+                <div class="nav-item dropdown">
+                    <a href="#" class="nav-link dropdown-toggle {{ Request::is('feature','quote','team','testimonial','404') ? 'active' : '' }}" data-bs-toggle="dropdown">Pages</a>
+                    <div class="dropdown-menu bg-light m-0">
+                        <a href="{{ url('/feature') }}" class="dropdown-item">Features</a>
+                        <a href="{{ url('/quote') }}" class="dropdown-item">Free Quote</a>
+                        <a href="{{ url('/team') }}" class="dropdown-item">Our Team</a>
+                        <a href="{{ url('/testimonial') }}" class="dropdown-item">Testimonial</a>
+                        <a href="{{ url('/404') }}" class="dropdown-item">404 Page</a>
+                    </div>
+                </div>
+                <a href="{{ url('/contact') }}" class="nav-item nav-link {{ Request::is('contact') ? 'active' : '' }}">Contact</a>
+            </div>
+            <a href="{{ route('login') }}" class="btn btn-primary py-4 px-lg-4 rounded-0 d-none d-lg-block">Login<i class="fa fa-arrow-right ms-3"></i></a>
         </div>
     </nav>
+    <!-- Navbar End -->
 
-    <!-- Hero Section -->
-    <section class="hero-section" id="beranda" style="margin-top: 76px;">
+
+
+    <!-- Carousel Start -->
+    <div class="container-fluid p-0 wow fadeIn" data-wow-delay="0.1s">
+        <div id="header-carousel" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img class="w-100" src="{{ asset('template/img/carousel-1.jpg') }}" alt="Image">
+                    <div class="carousel-caption">
+                        <div class="container">
+                            <div class="row justify-content-center">
+                                <div class="col-lg-8">
+                                    <h1 class="display-1 text-white mb-5 animated slideInDown">
+                                        Solusi Hukum Terpercaya untuk Anda
+                                    </h1>
+                                    <a href="#" class="btn btn-primary py-sm-3 px-sm-4">Konsultasikan Sekarang</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <img class="w-100" src="{{ asset('template/img/carousel-2.jpg') }}" alt="Image">
+                    <div class="carousel-caption">
+                        <div class="container">
+                            <div class="row justify-content-center">
+                                <div class="col-lg-7">
+                                    <h1 class="display-1 text-white mb-5 animated slideInDown">
+                                        Dapatkan Bantuan Hukum dari Ahlinya
+                                    </h1>
+                                    <a href="#" class="btn btn-primary py-sm-3 px-sm-4">Mulai Konsultasi</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Carousel Controls -->
+            <button class="carousel-control-prev" type="button" data-bs-target="#header-carousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Sebelumnya</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#header-carousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Berikutnya</span>
+            </button>
+        </div>
+    </div>
+    <!-- Carousel End -->
+
+
+   <!-- Top Feature Start -->
+    <div class="container-fluid top-feature py-5 pt-lg-0">
+        <div class="container py-5 pt-lg-0">
+            <div class="row gx-0">
+                <div class="col-lg-4 wow fadeIn" data-wow-delay="0.1s">
+                    <div class="bg-white shadow d-flex align-items-center h-100 px-5" style="min-height: 160px;">
+                        <div class="d-flex">
+                            <div class="flex-shrink-0 btn-lg-square rounded-circle bg-light">
+                                <i class="fa fa-times text-primary"></i>
+                            </div>
+                            <div class="ps-3">
+                                <h4>Tanpa Biaya Tersembunyi</h4>
+                                <span>Kami transparan dalam seluruh biaya layanan hukum.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 wow fadeIn" data-wow-delay="0.3s">
+                    <div class="bg-white shadow d-flex align-items-center h-100 px-5" style="min-height: 160px;">
+                        <div class="d-flex">
+                            <div class="flex-shrink-0 btn-lg-square rounded-circle bg-light">
+                                <i class="fa fa-users text-primary"></i>
+                            </div>
+                            <div class="ps-3">
+                                <h4>Tim Profesional & Berpengalaman</h4>
+                                <span>Didukung oleh tim ahli hukum dari berbagai bidang.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 wow fadeIn" data-wow-delay="0.5s">
+                    <div class="bg-white shadow d-flex align-items-center h-100 px-5" style="min-height: 160px;">
+                        <div class="d-flex">
+                            <div class="flex-shrink-0 btn-lg-square rounded-circle bg-light">
+                                <i class="fa fa-phone text-primary"></i>
+                            </div>
+                            <div class="ps-3">
+                                <h4>Layanan Konsultasi 24/7</h4>
+                                <span>Siap membantu Anda kapan pun dibutuhkan.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Top Feature End -->
+
+
+
+    <!-- About Start -->
+    <div class="container-xxl py-5">
         <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-md-8">
-                    <h1 class="hero-title">
-                        <i class="fas fa-balance-scale me-2"></i>HILAW
-                    </h1>
-                    <p class="hero-subtitle">
-                        Sistem Konsultasi Hukum Online — Terhubung dengan Ahli Hukum Terpercaya di Seluruh Indonesia
+            <div class="row g-5 align-items-end">
+                <div class="col-lg-3 col-md-5 wow fadeInUp" data-wow-delay="0.1s">
+                    <img class="img-fluid rounded" src="template/img/about.jpg">
+                </div>
+                <div class="col-lg-6 col-md-7 wow fadeInUp" data-wow-delay="0.3s">
+                    <h1 class="display-1 text-primary mb-0">25</h1>
+                    <p class="text-primary mb-4">Tahun Pengalaman</p>
+                    <h1 class="display-5 mb-4">Konsultasi Hukum yang Profesional & Terpercaya</h1>
+                    <p class="mb-4">
+                        Kami telah membantu ribuan klien mendapatkan solusi hukum terbaik. 
+                        Dengan tim pengacara berpengalaman dan berdedikasi, kami siap memberikan pelayanan konsultasi yang tepat, cepat, dan akurat.
                     </p>
-                    <div class="mt-4">
-                        <a href="/login" class="btn btn-primary-custom me-2">
-                            <i class="fas fa-gavel me-2"></i>Mulai Konsultasi
-                        </a>
-                        <a href="/register" class="btn btn-outline-light">
-                            <i class="fas fa-user-plus me-2"></i>Daftar Sekarang
-                        </a>
-                    </div>
+                    <a class="btn btn-primary py-3 px-4" href="">Hubungi Kami</a>
                 </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Lawyers Section -->
-    <section class="lawyers-section py-5 bg-light" id="advokat">
-        <div class="container">
-            <div class="row text-center mb-5">
-                <div class="col-12">
-                    <h2 class="mb-4">Advokat & Konsultan Hukum Tersedia</h2>
-                    <p class="text-muted">Konsultasi dengan para ahli hukum berpengalaman dan tersertifikasi</p>
-                </div>
-            </div>
-            <div class="row">
-                @forelse($doctors as $lawyer)
-                    <div class="col-lg-4 col-md-6 mb-4">
-                        <div class="lawyer-card text-center">
-                            <div class="online-status {{ $lawyer->is_online ? 'online' : 'offline' }}">
-                                <i class="fas fa-circle me-1"></i>
-                                {{ $lawyer->is_online ? 'Online' : 'Offline' }}
+                <div class="col-lg-3 col-md-12 wow fadeInUp" data-wow-delay="0.5s">
+                    <div class="row g-5">
+                        <div class="col-12 col-sm-6 col-lg-12">
+                            <div class="border-start ps-4">
+                                <i class="fa fa-gavel fa-3x text-primary mb-3"></i>
+                                <h4 class="mb-3">Terpercaya</h4>
+                                <span>Kami telah dipercaya oleh berbagai pihak dalam menangani berbagai kasus hukum.</span>
                             </div>
-                            
-                            <img src="{{ $lawyer->foto ? asset('storage/' . $lawyer->foto) : 'https://via.placeholder.com/300x180/1e40af/ffffff?text=' . urlencode(substr($lawyer->name, 0, 2)) }}" 
-                            alt="{{ $lawyer->name }}" 
-                            class="lawyer-photo img-fluid">
-                            
-                            <h5 class="lawyer-name">{{ $lawyer->name }}</h5>
-                            
-                            <p class="lawyer-specialty">
-                                <i class="fas fa-gavel me-1"></i>{{ $lawyer->keahlian }}
-                            </p>
-                            
-                            @if($lawyer->lulusan_universitas)
-                                <p class="lawyer-university">
-                                    <i class="fas fa-graduation-cap me-1"></i>{{ $lawyer->lulusan_universitas }}
-                                </p>
-                            @endif
-                            
-                            @if($lawyer->pengalaman)
-                                <p class="lawyer-experience">{{ $lawyer->pengalaman }}</p>
-                            @endif
-                            
-                            @if($lawyer->alamat)
-                                <p class="text-muted">
-                                    <i class="fas fa-map-marker-alt me-1"></i>{{ $lawyer->alamat }}
-                                </p>
-                            @endif
-                            
-                            <div class="lawyer-price">
-                                {{ $lawyer->tarif_konsultasi ? 'Rp ' . number_format($lawyer->tarif_konsultasi, 0, ',', '.') : 'Gratis' }}/sesi
-                            </div>
-                            
-                            <div class="d-flex justify-content-center flex-wrap gap-2">
-                                <a href="{{ route('login') }}" class="btn-consult">
-                                    <i class="fas fa-comments me-1"></i>Konsultasi
-                                </a>
-                                <a href="{{ route('login') }}" class="btn-show">
-                                    <i class="fas fa-eye me-1"></i>Lihat Detail
-                                </a>
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-12">
+                            <div class="border-start ps-4">
+                                <i class="fa fa-user-shield fa-3x text-primary mb-3"></i>
+                                <h4 class="mb-3">Tim Profesional</h4>
+                                <span>Tim pengacara kami terdiri dari ahli hukum berpengalaman dan berdedikasi.</span>
                             </div>
                         </div>
                     </div>
-                @empty
-                    <div class="col-12">
-                        <div class="text-center py-5">
-                            <i class="fas fa-user-tie fa-5x text-muted mb-4"></i>
-                            <h4 class="text-muted mb-3">Belum Ada Advokat Tersedia</h4>
-                            <p class="text-muted">Saat ini belum ada advokat yang terdaftar di sistem. Silakan coba lagi nanti.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- About End -->
+
+
+    <!-- Facts Start -->
+    <div class="container-fluid facts my-5 py-5" data-parallax="scroll" data-image-src="{{ asset('template/img/carousel-1.jpg') }}">
+        <div class="container py-5">
+            <div class="row g-5">
+                <div class="col-sm-6 col-lg-3 text-center wow fadeIn" data-wow-delay="0.1s">
+                    <h1 class="display-4 text-white" data-toggle="counter-up">1234</h1>
+                    <span class="fs-5 fw-semi-bold text-light">Klien Puas</span>
+                </div>
+                <div class="col-sm-6 col-lg-3 text-center wow fadeIn" data-wow-delay="0.3s">
+                    <h1 class="display-4 text-white" data-toggle="counter-up">567</h1>
+                    <span class="fs-5 fw-semi-bold text-light">Kasus Terselesaikan</span>
+                </div>
+                <div class="col-sm-6 col-lg-3 text-center wow fadeIn" data-wow-delay="0.5s">
+                    <h1 class="display-4 text-white" data-toggle="counter-up">25</h1>
+                    <span class="fs-5 fw-semi-bold text-light">Pengacara Profesional</span>
+                </div>
+                <div class="col-sm-6 col-lg-3 text-center wow fadeIn" data-wow-delay="0.7s">
+                    <h1 class="display-4 text-white" data-toggle="counter-up">15</h1>
+                    <span class="fs-5 fw-semi-bold text-light">Penghargaan Diterima</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Facts End -->
+
+
+    <!-- Features Start -->
+    <div class="container-xxl py-5">
+        <div class="container">
+            <div class="row g-5 align-items-center">
+                <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.1s">
+                    <p class="fs-5 fw-bold text-primary">Mengapa Memilih Kami?</p>
+                    <h1 class="display-5 mb-4">Alasan Kenapa Banyak Klien Mempercayai Kami</h1>
+                    <p class="mb-4">Kami memberikan layanan konsultasi hukum yang profesional, cepat, dan terpercaya. Didukung oleh tim pengacara berpengalaman, kami siap membantu menyelesaikan berbagai masalah hukum Anda dengan pendekatan yang humanis dan solutif.</p>
+                    <a class="btn btn-primary py-3 px-4" href="#">Pelajari Lebih Lanjut</a>
+                </div>
+                <div class="col-lg-6">
+                    <div class="row g-4 align-items-center">
+                        <div class="col-md-6">
+                            <div class="row g-4">
+                                <div class="col-12 wow fadeIn" data-wow-delay="0.3s">
+                                    <div class="text-center rounded py-5 px-4" style="box-shadow: 0 0 45px rgba(0,0,0,.08);">
+                                        <div class="btn-square bg-light rounded-circle mx-auto mb-4" style="width: 90px; height: 90px;">
+                                            <i class="fa fa-balance-scale fa-3x text-primary"></i>
+                                        </div>
+                                        <h4 class="mb-0">Konsultasi Hukum Online</h4>
+                                    </div>
+                                </div>
+                                <div class="col-12 wow fadeIn" data-wow-delay="0.5s">
+                                    <div class="text-center rounded py-5 px-4" style="box-shadow: 0 0 45px rgba(0,0,0,.08);">
+                                        <div class="btn-square bg-light rounded-circle mx-auto mb-4" style="width: 90px; height: 90px;">
+                                            <i class="fa fa-user-shield fa-3x text-primary"></i>
+                                        </div>
+                                        <h4 class="mb-0">Tim Profesional</h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 wow fadeIn" data-wow-delay="0.7s">
+                            <div class="text-center rounded py-5 px-4" style="box-shadow: 0 0 45px rgba(0,0,0,.08);">
+                                <div class="btn-square bg-light rounded-circle mx-auto mb-4" style="width: 90px; height: 90px;">
+                                    <i class="fa fa-headset fa-3x text-primary"></i>
+                                </div>
+                                <h4 class="mb-0">Respon Cepat 24/7</h4>
+                            </div>
                         </div>
                     </div>
-                @endforelse
-            </div>
-        </div>
-    </section>
-
-    <!-- Role Section -->
-    <section class="role-section py-5 bg-white" id="layanan">
-        <div class="container">
-            <div class="row text-center mb-5">
-                <div class="col-12">
-                    <h2 class="mb-4">Siapa Saja yang Dapat Menggunakan HILAW?</h2>
-                    <p class="text-muted">Platform yang menghubungkan masyarakat dengan para ahli hukum terpercaya</p>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-4 mb-4">
-                    <div class="role-card" onclick="redirectToLogin()">
-                        <i class="fas fa-users role-icon text-primary"></i>
-                        <h5 class="role-title">Masyarakat Umum</h5>
-                        <p class="role-description">
-                            Bertanya dan berkonsultasi seputar masalah hukum perdata, pidana, dan administrasi negara.
-                        </p>
-                    </div>
-                </div>
-                <div class="col-md-4 mb-4">
-                    <div class="role-card" onclick="redirectToLogin()">
-                        <i class="fas fa-user-tie role-icon text-primary-custom"></i>
-                        <h5 class="role-title">Advokat & Konsultan Hukum</h5>
-                        <p class="role-description">
-                            Memberikan konsultasi hukum profesional dan solusi terkait masalah hukum yang dihadapi klien.
-                        </p>
-                    </div>
-                </div>
-                <div class="col-md-4 mb-4">
-                    <div class="role-card" onclick="redirectToLogin()">
-                        <i class="fas fa-user-shield role-icon text-danger"></i>
-                        <h5 class="role-title">Administrator</h5>
-                        <p class="role-description">
-                            Mengelola sistem, memverifikasi kredensial advokat, dan memastikan kualitas layanan konsultasi.
-                        </p>
-                    </div>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+    <!-- Features End -->
 
-    <!-- Features Section -->
-    <section class="features-section py-5 bg-light" id="tentang">
-        <div class="container">
-            <div class="row text-center mb-5">
-                <div class="col-12">
-                    <h2 class="mb-4">Mengapa Memilih HILAW?</h2>
-                    <p class="text-muted">Layanan konsultasi hukum terpercaya dengan teknologi modern</p>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="feature-card">
-                        <i class="fas fa-clock feature-icon"></i>
-                        <h4 class="feature-title">Akses 24/7</h4>
-                        <p class="text-muted">Konsultasi hukum kapan saja, di mana saja melalui platform online yang mudah digunakan.</p>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="feature-card">
-                        <i class="fas fa-certificate feature-icon"></i>
-                        <h4 class="feature-title">Advokat Tersertifikasi</h4>
-                        <p class="text-muted">Didukung oleh advokat dan konsultan hukum berpengalaman serta tersertifikasi resmi.</p>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="feature-card">
-                        <i class="fas fa-shield-alt feature-icon"></i>
-                        <h4 class="feature-title">Kerahasiaan Terjamin</h4>
-                        <p class="text-muted">Platform yang aman dengan sistem keamanan tinggi untuk melindungi kerahasiaan klien.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
 
-    <!-- CTA Section -->
-    <section class="cta-section">
+    <!-- Service Start -->
+    <div class="container-xxl py-5">
         <div class="container">
-            <div class="row justify-content-center text-center">
-                <div class="col-md-8">
-                    <h3 class="mb-4">Mulai Konsultasi Hukum Anda Hari Ini</h3>
-                    <p class="mb-4">Bergabunglah dengan ribuan pengguna yang telah merasakan manfaat konsultasi hukum profesional.</p>
-                    <a href="/register" class="btn btn-light btn-lg text-primary-custom fw-bold">
-                        <i class="fas fa-rocket me-2"></i>Daftar Sekarang
-                    </a>
-                </div>
+            <div class="text-center mx-auto wow fadeInUp" data-wow-delay="0.1s" style="max-width: 500px;">
+                <p class="fs-5 fw-bold text-primary">Our Services</p>
+                <h1 class="display-5 mb-5">Services That We Offer For You</h1>
             </div>
-        </div>
-    </section>
-
-    <!-- Footer Bootstrap -->
-    <footer class="bg-white py-5 border-top">
-        <div class="container">
             <div class="row g-4">
-                <div class="col-md-4">
-                    <h5 class="text-primary-custom fw-bold mb-3">
-                        <i class="fas fa-balance-scale me-2"></i>HILAW
-                    </h5>
-                    <p class="text-muted mb-3">Platform konsultasi hukum online yang menghubungkan masyarakat dengan para advokat dan konsultan hukum tersertifikasi.</p>
-                    <div class="d-flex gap-2">
-                        <a href="#" class="text-muted fs-5"><i class="fab fa-facebook"></i></a>
-                        <a href="#" class="text-muted fs-5"><i class="fab fa-twitter"></i></a>
-                        <a href="#" class="text-muted fs-5"><i class="fab fa-instagram"></i></a>
-                        <a href="#" class="text-muted fs-5"><i class="fab fa-linkedin"></i></a>
+                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+                    <div class="service-item rounded d-flex h-100">
+                        <div class="service-img rounded">
+                            <img class="img-fluid" src="img/service-1.jpg" alt="">
+                        </div>
+                        <div class="service-text rounded p-5">
+                            <div class="btn-square rounded-circle mx-auto mb-3">
+                                <img class="img-fluid" src="img/icon/icon-3.png" alt="Icon">
+                            </div>
+                            <h4 class="mb-3">Landscaping</h4>
+                            <p class="mb-4">Erat ipsum justo amet duo et elitr dolor, est duo duo eos lorem sed diam stet diam sed stet.</p>
+                            <a class="btn btn-sm" href=""><i class="fa fa-plus text-primary me-2"></i>Read More</a>
+                        </div>
                     </div>
                 </div>
-                <div class="col-md-4">
-                    <h5 class="text-primary-custom fw-bold mb-3">Layanan</h5>
-                    <div class="d-flex flex-column gap-2">
-                        <a href="#advokat" class="text-muted text-decoration-none">Konsultasi Hukum Online</a>
-                        <a href="#advokat" class="text-muted text-decoration-none">Advokat Terpercaya</a>
-                        <a href="#" class="text-muted text-decoration-none">Bantuan Hukum</a>
-                        <a href="#" class="text-muted text-decoration-none">Edukasi Hukum</a>
+                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
+                    <div class="service-item rounded d-flex h-100">
+                        <div class="service-img rounded">
+                            <img class="img-fluid" src="img/service-2.jpg" alt="">
+                        </div>
+                        <div class="service-text rounded p-5">
+                            <div class="btn-square rounded-circle mx-auto mb-3">
+                                <img class="img-fluid" src="img/icon/icon-6.png" alt="Icon">
+                            </div>
+                            <h4 class="mb-3">Pruning plants</h4>
+                            <p class="mb-4">Erat ipsum justo amet duo et elitr dolor, est duo duo eos lorem sed diam stet diam sed stet.</p>
+                            <a class="btn btn-sm" href=""><i class="fa fa-plus text-primary me-2"></i>Read More</a>
+                        </div>
                     </div>
                 </div>
-                <div class="col-md-4">
-                    <h5 class="text-primary-custom fw-bold mb-3">Kontak</h5>
-                    <div class="d-flex flex-column gap-2">
-                        <a href="mailto:info@hilaw.id" class="text-muted text-decoration-none">
-                            <i class="fas fa-envelope me-2"></i>info@hilaw.id
-                        </a>
-                        <a href="tel:+628001234567" class="text-muted text-decoration-none">
-                            <i class="fas fa-phone me-2"></i>+62 800 1234 567
-                        </a>
-                        <div class="text-muted">
-                            <i class="fas fa-map-marker-alt me-2"></i>Jakarta, Indonesia
+                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
+                    <div class="service-item rounded d-flex h-100">
+                        <div class="service-img rounded">
+                            <img class="img-fluid" src="img/service-3.jpg" alt="">
+                        </div>
+                        <div class="service-text rounded p-5">
+                            <div class="btn-square rounded-circle mx-auto mb-3">
+                                <img class="img-fluid" src="img/icon/icon-5.png" alt="Icon">
+                            </div>
+                            <h4 class="mb-3">Irrigation & Drainage</h4>
+                            <p class="mb-4">Erat ipsum justo amet duo et elitr dolor, est duo duo eos lorem sed diam stet diam sed stet.</p>
+                            <a class="btn btn-sm" href=""><i class="fa fa-plus text-primary me-2"></i>Read More</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+                    <div class="service-item rounded d-flex h-100">
+                        <div class="service-img rounded">
+                            <img class="img-fluid" src="img/service-4.jpg" alt="">
+                        </div>
+                        <div class="service-text rounded p-5">
+                            <div class="btn-square rounded-circle mx-auto mb-3">
+                                <img class="img-fluid" src="img/icon/icon-4.png" alt="Icon">
+                            </div>
+                            <h4 class="mb-3">Garden Maintenance </h4>
+                            <p class="mb-4">Erat ipsum justo amet duo et elitr dolor, est duo duo eos lorem sed diam stet diam sed stet.</p>
+                            <a class="btn btn-sm" href=""><i class="fa fa-plus text-primary me-2"></i>Read More</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
+                    <div class="service-item rounded d-flex h-100">
+                        <div class="service-img rounded">
+                            <img class="img-fluid" src="img/service-5.jpg" alt="">
+                        </div>
+                        <div class="service-text rounded p-5">
+                            <div class="btn-square rounded-circle mx-auto mb-3">
+                                <img class="img-fluid" src="img/icon/icon-8.png" alt="Icon">
+                            </div>
+                            <h4 class="mb-3">Green Technology</h4>
+                            <p class="mb-4">Erat ipsum justo amet duo et elitr dolor, est duo duo eos lorem sed diam stet diam sed stet.</p>
+                            <a class="btn btn-sm" href=""><i class="fa fa-plus text-primary me-2"></i>Read More</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
+                    <div class="service-item rounded d-flex h-100">
+                        <div class="service-img rounded">
+                            <img class="img-fluid" src="img/service-6.jpg" alt="">
+                        </div>
+                        <div class="service-text rounded p-5">
+                            <div class="btn-square rounded-circle mx-auto mb-3">
+                                <img class="img-fluid" src="img/icon/icon-2.png" alt="Icon">
+                            </div>
+                            <h4 class="mb-3">Urban Gardening</h4>
+                            <p class="mb-4">Erat ipsum justo amet duo et elitr dolor, est duo duo eos lorem sed diam stet diam sed stet.</p>
+                            <a class="btn btn-sm" href=""><i class="fa fa-plus text-primary me-2"></i>Read More</a>
                         </div>
                     </div>
                 </div>
             </div>
-            <hr class="my-4">
-            <div class="text-center">
-                <p class="text-muted mb-2">&copy; 2024 HILAW. Semua hak dilindungi undang-undang.</p>
-                <div class="d-flex justify-content-center gap-3 flex-wrap">
-                    <a href="#" class="text-muted text-decoration-none">Syarat & Ketentuan</a>
-                    <a href="#" class="text-muted text-decoration-none">Kebijakan Privasi</a>
-                    <a href="#" class="text-muted text-decoration-none">FAQ</a>
-                    <a href="#" class="text-muted text-decoration-none">Bantuan</a>
+        </div>
+    </div>
+    <!-- Service End -->
+
+
+    <!-- Quote Start -->
+    <div class="container-fluid quote my-5 py-5" data-parallax="scroll" data-image-src="img/carousel-2.jpg">
+        <div class="container py-5">
+            <div class="row justify-content-center">
+                <div class="col-lg-7">
+                    <div class="bg-white rounded p-4 p-sm-5 wow fadeIn" data-wow-delay="0.5s">
+                        <h1 class="display-5 text-center mb-5">Get A Free Quote</h1>
+                        <div class="row g-3">
+                            <div class="col-sm-6">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control bg-light border-0" id="gname" placeholder="Gurdian Name">
+                                    <label for="gname">Your Name</label>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-floating">
+                                    <input type="email" class="form-control bg-light border-0" id="gmail" placeholder="Gurdian Email">
+                                    <label for="gmail">Your Email</label>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control bg-light border-0" id="cname" placeholder="Child Name">
+                                    <label for="cname">Your Mobile</label>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control bg-light border-0" id="cage" placeholder="Child Age">
+                                    <label for="cage">Service Type</label>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-floating">
+                                    <textarea class="form-control bg-light border-0" placeholder="Leave a message here" id="message" style="height: 100px"></textarea>
+                                    <label for="message">Message</label>
+                                </div>
+                            </div>
+                            <div class="col-12 text-center">
+                                <button class="btn btn-primary py-3 px-4" type="submit">Submit Now</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </footer>
+    </div>
+    <!-- Quote End -->
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        // Function to redirect to login
-        function redirectToLogin() {
-            window.location.href = '/login';
-        }
 
-        // Navbar active state management
-        document.querySelectorAll('.navbar-nav .nav-link').forEach(link => {
-            link.addEventListener('click', function(e) {
-                // Allow normal navigation for actual links
-                if (this.href && this.href !== window.location.href + '#' && !this.onclick) {
-                    // Remove active class from all links
-                    document.querySelectorAll('.navbar-nav .nav-link').forEach(l => {
-                        l.classList.remove('bg-primary-custom', 'text-white');
-                    });
-                    // Add active class to clicked link
-                    this.classList.add('bg-primary-custom', 'text-white');
-                }
-            });
-            
-            // Hover effect for non-active links
-            link.addEventListener('mouseenter', function() {
-                if (!this.classList.contains('bg-primary-custom')) {
-                    this.classList.add('bg-light');
-                }
-            });
-            link.addEventListener('mouseleave', function() {
-                if (!this.classList.contains('bg-primary-custom')) {
-                    this.classList.remove('bg-light');
-                }
-            });
-        });
+    <!-- Projects Start -->
+    <div class="container-xxl py-5">
+        <div class="container">
+            <div class="text-center mx-auto wow fadeInUp" data-wow-delay="0.1s" style="max-width: 500px;">
+                <p class="fs-5 fw-bold text-primary">Our Projects</p>
+                <h1 class="display-5 mb-5">Some Of Our Wonderful Projects</h1>
+            </div>
+            <div class="row wow fadeInUp" data-wow-delay="0.3s">
+                <div class="col-12 text-center">
+                    <ul class="list-inline rounded mb-5" id="portfolio-flters">
+                        <li class="mx-2 active" data-filter="*">All</li>
+                        <li class="mx-2" data-filter=".first">Complete Projects</li>
+                        <li class="mx-2" data-filter=".second">Ongoing Projects</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row g-4 portfolio-container">
+                <div class="col-lg-4 col-md-6 portfolio-item first wow fadeInUp" data-wow-delay="0.1s">
+                    <div class="portfolio-inner rounded">
+                        <img class="img-fluid" src="img/service-1.jpg" alt="">
+                        <div class="portfolio-text">
+                            <h4 class="text-white mb-4">Landscaping</h4>
+                            <div class="d-flex">
+                                <a class="btn btn-lg-square rounded-circle mx-2" href="img/service-1.jpg" data-lightbox="portfolio"><i class="fa fa-eye"></i></a>
+                                <a class="btn btn-lg-square rounded-circle mx-2" href=""><i class="fa fa-link"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 portfolio-item second wow fadeInUp" data-wow-delay="0.3s">
+                    <div class="portfolio-inner rounded">
+                        <img class="img-fluid" src="img/service-2.jpg" alt="">
+                        <div class="portfolio-text">
+                            <h4 class="text-white mb-4">Pruning plants</h4>
+                            <div class="d-flex">
+                                <a class="btn btn-lg-square rounded-circle mx-2" href="img/service-2.jpg" data-lightbox="portfolio"><i class="fa fa-eye"></i></a>
+                                <a class="btn btn-lg-square rounded-circle mx-2" href=""><i class="fa fa-link"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 portfolio-item first wow fadeInUp" data-wow-delay="0.5s">
+                    <div class="portfolio-inner rounded">
+                        <img class="img-fluid" src="img/service-3.jpg" alt="">
+                        <div class="portfolio-text">
+                            <h4 class="text-white mb-4">Irrigation & Drainage</h4>
+                            <div class="d-flex">
+                                <a class="btn btn-lg-square rounded-circle mx-2" href="img/service-3.jpg" data-lightbox="portfolio"><i class="fa fa-eye"></i></a>
+                                <a class="btn btn-lg-square rounded-circle mx-2" href=""><i class="fa fa-link"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 portfolio-item second wow fadeInUp" data-wow-delay="0.1s">
+                    <div class="portfolio-inner rounded">
+                        <img class="img-fluid" src="img/service-4.jpg" alt="">
+                        <div class="portfolio-text">
+                            <h4 class="text-white mb-4">Garden Maintenance</h4>
+                            <div class="d-flex">
+                                <a class="btn btn-lg-square rounded-circle mx-2" href="img/service-4.jpg" data-lightbox="portfolio"><i class="fa fa-eye"></i></a>
+                                <a class="btn btn-lg-square rounded-circle mx-2" href=""><i class="fa fa-link"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 portfolio-item first wow fadeInUp" data-wow-delay="0.3s">
+                    <div class="portfolio-inner rounded">
+                        <img class="img-fluid" src="img/service-5.jpg" alt="">
+                        <div class="portfolio-text">
+                            <h4 class="text-white mb-4">Green Technology</h4>
+                            <div class="d-flex">
+                                <a class="btn btn-lg-square rounded-circle mx-2" href="img/service-5.jpg" data-lightbox="portfolio"><i class="fa fa-eye"></i></a>
+                                <a class="btn btn-lg-square rounded-circle mx-2" href=""><i class="fa fa-link"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 portfolio-item second wow fadeInUp" data-wow-delay="0.5s">
+                    <div class="portfolio-inner rounded">
+                        <img class="img-fluid" src="img/service-6.jpg" alt="">
+                        <div class="portfolio-text">
+                            <h4 class="text-white mb-4">Urban Gardening</h4>
+                            <div class="d-flex">
+                                <a class="btn btn-lg-square rounded-circle mx-2" href="img/service-6.jpg" data-lightbox="portfolio"><i class="fa fa-eye"></i></a>
+                                <a class="btn btn-lg-square rounded-circle mx-2" href=""><i class="fa fa-link"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Projects End -->
 
-        // Smooth scrolling for anchor links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
-            });
-        });
 
-        // Navbar scroll effect
-        window.addEventListener('scroll', function() {
-            const navbar = document.querySelector('.navbar');
-            if (window.scrollY > 50) {
-                navbar.style.background = 'rgba(255, 255, 255, 0.98)';
-            } else {
-                navbar.style.background = 'rgba(255, 255, 255, 0.95)';
-            }
-        });
-    </script>
+    <!-- Team Start -->
+    <div class="container-xxl py-5">
+        <div class="container">
+            <div class="text-center mx-auto wow fadeInUp" data-wow-delay="0.1s" style="max-width: 500px;">
+                <p class="fs-5 fw-bold text-primary">Our Team</p>
+                <h1 class="display-5 mb-5">Dedicated & Experienced Team Members</h1>
+            </div>
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+                    <div class="team-item rounded">
+                        <img class="img-fluid" src="img/team-1.jpg" alt="">
+                        <div class="team-text">
+                            <h4 class="mb-0">Doris Jordan</h4>
+                            <p class="text-primary">Landscape Designer</p>
+                            <div class="team-social d-flex">
+                                <a class="btn btn-square rounded-circle me-2" href=""><i class="fab fa-facebook-f"></i></a>
+                                <a class="btn btn-square rounded-circle me-2" href=""><i class="fab fa-twitter"></i></a>
+                                <a class="btn btn-square rounded-circle me-2" href=""><i class="fab fa-instagram"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
+                    <div class="team-item rounded">
+                        <img class="img-fluid" src="img/team-2.jpg" alt="">
+                        <div class="team-text">
+                            <h4 class="mb-0">Johnny Ramirez</h4>
+                            <p class="text-primary">Garden Designer</p>
+                            <div class="team-social d-flex">
+                                <a class="btn btn-square rounded-circle me-2" href=""><i class="fab fa-facebook-f"></i></a>
+                                <a class="btn btn-square rounded-circle me-2" href=""><i class="fab fa-twitter"></i></a>
+                                <a class="btn btn-square rounded-circle me-2" href=""><i class="fab fa-instagram"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
+                    <div class="team-item rounded">
+                        <img class="img-fluid" src="img/team-3.jpg" alt="">
+                        <div class="team-text">
+                            <h4 class="mb-0">Diana Wagner</h4>
+                            <p class="text-primary">Senior Gardener</p>
+                            <div class="team-social d-flex">
+                                <a class="btn btn-square rounded-circle me-2" href=""><i class="fab fa-facebook-f"></i></a>
+                                <a class="btn btn-square rounded-circle me-2" href=""><i class="fab fa-twitter"></i></a>
+                                <a class="btn btn-square rounded-circle me-2" href=""><i class="fab fa-instagram"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Team End -->
+
+
+    <!-- Testimonial Start -->
+    <div class="container-xxl py-5">
+        <div class="container">
+            <div class="row g-5">
+                <div class="col-lg-5 wow fadeInUp" data-wow-delay="0.1s">
+                    <p class="fs-5 fw-bold text-primary">Testimonial</p>
+                    <h1 class="display-5 mb-5">What Our Clients Say About Us!</h1>
+                    <p class="mb-4">Tempor erat elitr rebum at clita. Diam dolor diam ipsum sit. Aliqu diam amet diam et eos. Clita erat ipsum et lorem et sit sed stet lorem sit clita duo justo.</p>
+                    <a class="btn btn-primary py-3 px-4" href="">See More</a>
+                </div>
+                <div class="col-lg-7 wow fadeInUp" data-wow-delay="0.5s">
+                    <div class="owl-carousel testimonial-carousel">
+                        <div class="testimonial-item">
+                            <img class="img-fluid rounded mb-3" src="img/testimonial-1.jpg" alt="">
+                            <p class="fs-5">Dolores sed duo clita tempor justo dolor et stet lorem kasd labore dolore lorem ipsum. At lorem lorem magna ut et, nonumy et labore et tempor diam tempor erat.</p>
+                            <h4>Client Name</h4>
+                            <span>Profession</span>
+                        </div>
+                        <div class="testimonial-item">
+                            <img class="img-fluid rounded mb-3" src="img/testimonial-2.jpg" alt="">
+                            <p class="fs-5">Dolores sed duo clita tempor justo dolor et stet lorem kasd labore dolore lorem ipsum. At lorem lorem magna ut et, nonumy et labore et tempor diam tempor erat.</p>
+                            <h4>Client Name</h4>
+                            <span>Profession</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Testimonial End -->
+
+
+    <!-- Footer Start -->
+    <div class="container-fluid bg-dark text-light footer mt-5 py-5 wow fadeIn" data-wow-delay="0.1s">
+        <div class="container py-5">
+            <div class="row g-5">
+                <div class="col-lg-3 col-md-6">
+                    <h4 class="text-white mb-4">Our Office</h4>
+                    <p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i>123 Street, New York, USA</p>
+                    <p class="mb-2"><i class="fa fa-phone-alt me-3"></i>+012 345 67890</p>
+                    <p class="mb-2"><i class="fa fa-envelope me-3"></i>info@example.com</p>
+                    <div class="d-flex pt-2">
+                        <a class="btn btn-square btn-outline-light rounded-circle me-2" href=""><i class="fab fa-twitter"></i></a>
+                        <a class="btn btn-square btn-outline-light rounded-circle me-2" href=""><i class="fab fa-facebook-f"></i></a>
+                        <a class="btn btn-square btn-outline-light rounded-circle me-2" href=""><i class="fab fa-youtube"></i></a>
+                        <a class="btn btn-square btn-outline-light rounded-circle me-2" href=""><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <h4 class="text-white mb-4">Services</h4>
+                    <a class="btn btn-link" href="">Landscaping</a>
+                    <a class="btn btn-link" href="">Pruning plants</a>
+                    <a class="btn btn-link" href="">Urban Gardening</a>
+                    <a class="btn btn-link" href="">Garden Maintenance</a>
+                    <a class="btn btn-link" href="">Green Technology</a>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <h4 class="text-white mb-4">Quick Links</h4>
+                    <a class="btn btn-link" href="">About Us</a>
+                    <a class="btn btn-link" href="">Contact Us</a>
+                    <a class="btn btn-link" href="">Our Services</a>
+                    <a class="btn btn-link" href="">Terms & Condition</a>
+                    <a class="btn btn-link" href="">Support</a>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <h4 class="text-white mb-4">Newsletter</h4>
+                    <p>Dolor amet sit justo amet elitr clita ipsum elitr est.</p>
+                    <div class="position-relative w-100">
+                        <input class="form-control bg-light border-light w-100 py-3 ps-4 pe-5" type="text" placeholder="Your email">
+                        <button type="button" class="btn btn-primary py-2 position-absolute top-0 end-0 mt-2 me-2">SignUp</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Footer End -->
+
+
+    <!-- Copyright Start -->
+    <div class="container-fluid copyright py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+                    &copy; <a class="border-bottom" href="#">Your Site Name</a>, All Right Reserved.
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <!--/*** This template is free as long as you keep the footer author’s credit link/attribution link/backlink. If you'd like to use the template without the footer author’s credit link/attribution link/backlink, you can purchase the Credit Removal License from "https://htmlcodex.com/credit-removal". Thank you for your support. ***/-->
+                    Designed By <a class="border-bottom" href="https://htmlcodex.com">HTML Codex</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Copyright End -->
+
+
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-lg btn-primary btn-lg-square rounded-circle back-to-top"><i class="bi bi-arrow-up"></i></a>
+
+
+   <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ asset('template/lib/wow/wow.min.js') }}"></script>
+    <script src="{{ asset('template/lib/easing/easing.min.js') }}"></script>
+    <script src="{{ asset('template/lib/waypoints/waypoints.min.js') }}"></script>
+    <script src="{{ asset('template/lib/owlcarousel/owl.carousel.min.js') }}"></script>
+    <script src="{{ asset('template/lib/counterup/counterup.min.js') }}"></script>
+    <script src="{{ asset('template/lib/parallax/parallax.min.js') }}"></script>
+    <script src="{{ asset('template/lib/isotope/isotope.pkgd.min.js') }}"></script>
+    <script src="{{ asset('template/lib/lightbox/js/lightbox.min.js') }}"></script>
+
+    <!-- Template Javascript -->
+    <script src="{{ asset('template/js/main.js') }}"></script>
 </body>
+
 </html>

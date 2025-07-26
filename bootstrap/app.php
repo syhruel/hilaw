@@ -12,6 +12,7 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
+            'check.dokter.approval' => \App\Http\Middleware\CheckDokterApproval::class,
             'role' => \App\Http\Middleware\RoleMiddleware::class,
         ]);
     })

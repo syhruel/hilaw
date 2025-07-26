@@ -13,10 +13,33 @@ class LiveChat extends Component
     public $consultationId;
     public $messages;
     public $messageText = '';
+    public $chatEnded = false;
+    public $remainingSeconds = 0;
+    public $totalDurationSeconds = 0;
+    public $isDokter = false;
+    public $chatStarted = false;
+    public $currentUserMessageCount = 0; 
+    public $hasRefreshed = false; 
 
     public function mount($consultationId)
     {
         $this->consultationId = $consultationId;
+        $this->initializeMessageCount();
+        $this->checkRefreshStatus();
+    }
+
+    public function initializeMessageCount()
+    {
+        $currentUserId = Auth::id();
+        $sessionKey = 'message_count_' . $currentUserId . '_' . $this->consultationId;
+        $this->currentUserMessageCount = session($sessionKey, 0);
+    }
+
+    public function checkRefreshStatus()
+    {
+        $currentUserId = Auth::id();
+        $refreshKey = 'has_refreshed_' . $currentUserId . '_' . $this->consultationId;
+        $this->hasRefreshed = session($refreshKey, false);
     }
 
     public function sendMessage()
@@ -24,31 +47,54 @@ class LiveChat extends Component
         if (trim($this->messageText) === '') return;
 
         $consultation = Consultation::findOrFail($this->consultationId);
-
-        if (!$consultation->chat_started_at) {
-            $senders = Message::where('consultation_id', $this->consultationId)->distinct()->pluck('sender_id');
-
-            if (
-                $senders->contains($consultation->user_id) &&
-                $senders->contains($consultation->dokter_id)
-            ) {
-                $consultation->chat_started_at = now('Asia/Jakarta');
-                $consultation->save();
-            }
-        }
-
-        $receiverId = Auth::id() === $consultation->user_id
+        $senderId = Auth::id();
+        $receiverId = $senderId === $consultation->user_id
             ? $consultation->dokter_id
             : $consultation->user_id;
 
         Message::create([
             'consultation_id' => $this->consultationId,
-            'sender_id' => Auth::id(),
+            'sender_id' => $senderId,
             'receiver_id' => $receiverId,
             'message' => $this->messageText,
         ]);
 
         $this->messageText = '';
+
+        $currentUserId = Auth::id();
+        $this->currentUserMessageCount++;
+        $sessionKey = 'message_count_' . $currentUserId . '_' . $this->consultationId;
+        session([$sessionKey => $this->currentUserMessageCount]);
+
+        if ($this->currentUserMessageCount >= 2 && !$this->hasRefreshed) {
+            $refreshKey = 'has_refreshed_' . $currentUserId . '_' . $this->consultationId;
+            session([$refreshKey => true]);
+            session()->forget($sessionKey);
+            
+            $this->hasRefreshed = true;
+            $this->currentUserMessageCount = 0;
+            
+            $userType = $this->isDokter ? 'dokter' : 'pengguna';
+            $this->dispatch('auto-refresh-page', ['userType' => $userType]);
+        }
+
+        if (!$consultation->chat_started_at) {
+            $userSent = Message::where('consultation_id', $this->consultationId)
+                ->where('sender_id', $consultation->user_id)
+                ->exists();
+
+            $dokterSent = Message::where('consultation_id', $this->consultationId)
+                ->where('sender_id', $consultation->dokter_id)
+                ->exists();
+
+            if ($userSent && $dokterSent) {
+                $consultation->chat_started_at = now('Asia/Jakarta');
+                $consultation->save();
+                
+                $this->chatStarted = true;
+                $this->dispatch('chat-started-refresh');
+            }
+        }
     }
 
     public function endChat()
@@ -61,26 +107,35 @@ class LiveChat extends Component
         }
     }
 
-   public function render()
+    public function render()
     {
         $consultation = Consultation::findOrFail($this->consultationId);
+        $this->isDokter = Auth::id() === $consultation->dokter_id;
+        
+        $this->initializeMessageCount();
+        $this->checkRefreshStatus();
+        
+        $this->totalDurationSeconds = $consultation->duration_minutes * 60;
+        $this->chatEnded = $consultation->chat_ended_at !== null;
+        $this->chatStarted = $consultation->chat_started_at !== null;
 
-        $durationSeconds = $consultation->duration_minutes * 60;
-        $chatEnded = $consultation->chat_ended_at !== null;
-        $remainingSeconds = $durationSeconds;
+        $chatEndTimestamp = null;
 
-        if ($consultation->chat_started_at) {
-            $start = \Carbon\Carbon::parse($consultation->chat_started_at)->timezone('Asia/Jakarta');
+        if ($this->chatStarted && !$this->chatEnded) {
+            $start = Carbon::parse($consultation->chat_started_at)->timezone('Asia/Jakarta');
             $now = now('Asia/Jakarta');
+            $elapsed = $now->diffInSeconds($start);
+            $this->remainingSeconds = max($this->totalDurationSeconds - $elapsed, 0);
 
-            $elapsedSeconds = $now->diffInSeconds($start);
-            $remainingSeconds = max($durationSeconds - $elapsedSeconds, 0);
+            $chatEndTimestamp = $start->addSeconds($this->totalDurationSeconds)->timestamp;
 
-            if (!$chatEnded && $remainingSeconds <= 0) {
+            if ($this->remainingSeconds <= 0) {
                 $consultation->chat_ended_at = now('Asia/Jakarta');
                 $consultation->save();
-                $chatEnded = true;
+                $this->chatEnded = true;
             }
+        } else {
+            $this->remainingSeconds = $this->totalDurationSeconds;
         }
 
         $this->messages = Message::where('consultation_id', $this->consultationId)
@@ -89,11 +144,55 @@ class LiveChat extends Component
             ->get();
 
         return view('livewire.live-chat', [
-            'consultation' => $consultation,
-            'remainingSeconds' => $remainingSeconds,
-            'chatEnded' => $chatEnded,
-            'isDokter' => auth()->id() === $consultation->dokter_id,
-            'totalDurationSeconds' => $durationSeconds,
+            'chatEndTimestamp' => $chatEndTimestamp,
         ]);
+    }
+
+    public function checkChatStatus()
+    {
+        $consultation = Consultation::find($this->consultationId);
+
+        if (!$consultation) return;
+
+        $this->chatEnded = $consultation->chat_ended_at !== null;
+        
+        if ($this->chatEnded) return;
+
+        $wasChatStarted = $this->chatStarted; 
+
+        if (!$consultation->chat_started_at) {
+            $userSent = Message::where('consultation_id', $this->consultationId)
+                ->where('sender_id', $consultation->user_id)
+                ->exists();
+
+            $dokterSent = Message::where('consultation_id', $this->consultationId)
+                ->where('sender_id', $consultation->dokter_id)
+                ->exists();
+
+            if ($userSent && $dokterSent) {
+                $consultation->chat_started_at = now('Asia/Jakarta');
+                $consultation->save();
+            }
+        }
+
+        $this->chatStarted = $consultation->chat_started_at !== null;
+
+        if (!$wasChatStarted && $this->chatStarted) {
+            $this->dispatch('chat-started-refresh');
+        }
+
+        if ($this->chatStarted) {
+            $this->totalDurationSeconds = $consultation->duration_minutes * 60;
+            $start = Carbon::parse($consultation->chat_started_at)->timezone('Asia/Jakarta');
+            $now = now('Asia/Jakarta');
+            $elapsed = $now->diffInSeconds($start);
+            $this->remainingSeconds = max(0, $this->totalDurationSeconds - $elapsed);
+            
+            if ($this->remainingSeconds <= 0) {
+                $consultation->chat_ended_at = now('Asia/Jakarta');
+                $consultation->save();
+                $this->chatEnded = true;
+            }
+        }
     }
 }

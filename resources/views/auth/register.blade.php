@@ -8,20 +8,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         body {
-            background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+            background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
             min-height: 100vh;
-            position: relative;
-        }
-        
-        body::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M30 20h40v60h-40z" fill="rgba(255,255,255,0.05)"/><path d="M25 25h50v50h-50z" fill="rgba(255,255,255,0.03)"/></svg>');
-            opacity: 0.1;
         }
         
         .register-page {
@@ -29,14 +17,13 @@
         }
         
         .register-box {
-            width: 480px;
-            position: relative;
-            z-index: 1;
+            width: 400px;
+            margin: 7% auto;
         }
         
         .register-logo {
             background: white;
-            color: #1e40af;
+            color: #16a34a;
             border-radius: 10px;
             padding: 15px;
             margin-bottom: 20px;
@@ -59,8 +46,8 @@
             padding: 30px;
         }
         
-        .login-box-msg {
-            color: #1e40af;
+        .register-box-msg {
+            color: #16a34a;
             font-weight: 600;
             text-align: center;
             margin-bottom: 25px;
@@ -70,62 +57,71 @@
             border: 2px solid #e2e8f0;
             border-radius: 8px;
             padding: 12px;
-            font-size: 15px;
         }
         
         .form-control:focus {
-            border-color: #1e40af;
-            box-shadow: 0 0 0 0.2rem rgba(30, 64, 175, 0.1);
+            border-color: #16a34a;
+            box-shadow: 0 0 0 0.2rem rgba(22, 163, 74, 0.1);
         }
         
         .input-group-text {
-            background: #f8fafc;
+            background: #f0fdf4;
             border: 2px solid #e2e8f0;
             border-left: none;
             border-radius: 0 8px 8px 0;
-            color: #1e40af;
+            color: #16a34a;
         }
         
         .btn-primary {
-            background: #1e40af;
+            background: #16a34a;
             border: none;
             border-radius: 8px;
             padding: 12px;
             font-weight: 600;
-            transition: all 0.3s ease;
         }
         
         .btn-primary:hover {
-            background: #1e3a8a;
-            transform: translateY(-1px);
+            background: #15803d;
+        }
+        
+        .alert-success {
+            background: #dcfce7;
+            border: 1px solid #bbf7d0;
+            color: #166534;
+            border-radius: 8px;
+        }
+        
+        .alert-danger {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #991b1b;
+            border-radius: 8px;
         }
         
         .invalid-feedback {
-            color: #dc3545;
-            font-size: 14px;
+            color: #dc2626;
+            display: block;
         }
         
         a {
-            color: #1e40af;
+            color: #16a34a;
             text-decoration: none;
         }
         
         a:hover {
-            color: #1e3a8a;
+            color: #15803d;
             text-decoration: underline;
         }
         
         .balance-icon {
-            color: #1e40af;
+            color: #16a34a;
             margin-right: 8px;
         }
-        
-        .input-group {
-            margin-bottom: 15px;
-        }
-        
-        .row {
-            margin-top: 20px;
+
+        .register-subtitle {
+            color: #6b7280;
+            font-size: 14px;
+            margin-bottom: 20px;
         }
     </style>
 </head>
@@ -133,81 +129,92 @@
     <div class="register-box">
         <div class="register-logo">
             <i class="fas fa-balance-scale balance-icon"></i>
-            <b>HILAW</b> - Registrasi Pengguna
+            <b>HILAW</b> System
         </div>
 
         <div class="card">
             <div class="card-body register-card-body">
-                <p class="login-box-msg">Silakan daftar untuk konsultasi kehutanan</p>
+                <h3 class="register-box-msg">Registrasi Pengguna</h3>
+                <p class="register-subtitle text-center">Silakan daftar untuk konsultasi hukum</p>
+
+                @if (session('success'))
+                    <div class="alert alert-success">{{ session('success') }}</div>
+                @endif
+
+                @if (session('error'))
+                    <div class="alert alert-danger">{{ session('error') }}</div>
+                @endif
 
                 <form method="POST" action="{{ route('register') }}">
                     @csrf
+                    <input type="hidden" name="role" value="pengguna">
 
                     <div class="input-group mb-3">
                         <input type="text" name="name" class="form-control @error('name') is-invalid @enderror" 
-                               placeholder="Nama lengkap" value="{{ old('name') }}" required autofocus>
+                               placeholder="Nama Lengkap" value="{{ old('name') }}" required>
                         <div class="input-group-append">
                             <div class="input-group-text">
                                 <span class="fas fa-user"></span>
                             </div>
                         </div>
-                        @error('name') 
-                            <span class="invalid-feedback d-block">{{ $message }}</span> 
+                        @error('name')
+                            <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
 
                     <div class="input-group mb-3">
                         <input type="email" name="email" class="form-control @error('email') is-invalid @enderror" 
-                               placeholder="Email aktif" value="{{ old('email') }}" required>
+                               placeholder="Email" value="{{ old('email') }}" required>
                         <div class="input-group-append">
                             <div class="input-group-text">
                                 <span class="fas fa-envelope"></span>
                             </div>
                         </div>
-                        @error('email') 
-                            <span class="invalid-feedback d-block">{{ $message }}</span> 
+                        @error('email')
+                            <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
 
                     <div class="input-group mb-3">
                         <input type="password" name="password" class="form-control @error('password') is-invalid @enderror" 
-                               placeholder="Password" required>
+                               placeholder="Password (minimal 8 karakter)" required>
                         <div class="input-group-append">
                             <div class="input-group-text">
                                 <span class="fas fa-lock"></span>
                             </div>
                         </div>
-                        @error('password') 
-                            <span class="invalid-feedback d-block">{{ $message }}</span> 
+                        @error('password')
+                            <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
 
                     <div class="input-group mb-3">
-                        <input type="password" name="password_confirmation" class="form-control" 
-                               placeholder="Konfirmasi password" required>
+                        <input type="password" name="password_confirmation" class="form-control @error('password_confirmation') is-invalid @enderror" 
+                               placeholder="Konfirmasi Password" required>
                         <div class="input-group-append">
                             <div class="input-group-text">
                                 <span class="fas fa-lock"></span>
                             </div>
                         </div>
+                        @error('password_confirmation')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
 
-                    <div class="row align-items-center mt-3">
-                        <div class="col-md-6 text-center text-md-start mb-2 mb-md-0">
-                            <a href="{{ route('login') }}">Sudah punya akun?</a>
-                        </div>
-                        <div class="col-md-6 text-center text-md-end">
-                            <a href="{{ route('register.dokter') }}" class="d-inline">Daftar sebagai ahli kehutanan</a>
-                        </div>
-                    </div>
-
-                    <div class="row mt-3">
+                    <div class="row">
                         <div class="col-12">
-                            <button type="submit" class="btn btn-primary btn-block w-100">Daftar</button>
+                            <button type="submit" class="btn btn-primary btn-block">Daftar Sekarang</button>
                         </div>
                     </div>
                 </form>
 
+                <p class="mb-1 text-center mt-3">
+                    <a href="{{ route('login') }}">Sudah punya akun? Login di sini</a>
+                </p>
+                <hr>
+                <p class="mb-0 text-center">
+                    <a href="{{ route('register.dokter') }}">Daftar sebagai ahli hukum</a>
+                </p>
             </div>
         </div>
     </div>

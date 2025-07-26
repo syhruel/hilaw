@@ -8,21 +8,26 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
+     *
+     * @return void
      */
-    public function up(): void
+    public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            //
+            $table->enum('approval_status', ['pending', 'approved', 'rejected'])->default('pending')->after('is_approved');
+            $table->text('rejection_reason')->nullable()->after('approval_status');
         });
     }
 
     /**
      * Reverse the migrations.
+     *
+     * @return void
      */
-    public function down(): void
+    public function down()
     {
         Schema::table('users', function (Blueprint $table) {
-            //
+            $table->dropColumn(['approval_status', 'rejection_reason']);
         });
     }
 };

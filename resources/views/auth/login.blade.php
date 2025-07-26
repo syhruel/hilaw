@@ -8,20 +8,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         body {
-            background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+            background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
             min-height: 100vh;
-            position: relative;
-        }
-        
-        body::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M30 20h40v60h-40z" fill="rgba(255,255,255,0.05)"/><path d="M25 25h50v50h-50z" fill="rgba(255,255,255,0.03)"/></svg>');
-            opacity: 0.1;
         }
         
         .login-page {
@@ -30,17 +18,16 @@
         
         .login-box {
             width: 380px;
-            position: relative;
-            z-index: 1;
         }
         
         .login-logo {
             background: white;
-            color: #1e40af;
+            color: #16a34a;
             border-radius: 10px;
             padding: 15px;
             margin-bottom: 20px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            text-align: center;
         }
         
         .login-logo b {
@@ -59,7 +46,7 @@
         }
         
         .login-box-msg {
-            color: #1e40af;
+            color: #16a34a;
             font-weight: 600;
             text-align: center;
             margin-bottom: 25px;
@@ -69,72 +56,68 @@
             border: 2px solid #e2e8f0;
             border-radius: 8px;
             padding: 12px;
-            font-size: 15px;
         }
         
         .form-control:focus {
-            border-color: #1e40af;
-            box-shadow: 0 0 0 0.2rem rgba(30, 64, 175, 0.1);
+            border-color: #16a34a;
+            box-shadow: 0 0 0 0.2rem rgba(22, 163, 74, 0.1);
         }
         
         .input-group-text {
-            background: #f8fafc;
+            background: #f0fdf4;
             border: 2px solid #e2e8f0;
             border-left: none;
             border-radius: 0 8px 8px 0;
-            color: #1e40af;
+            color: #16a34a;
         }
         
         .btn-primary {
-            background: #1e40af;
+            background: #16a34a;
             border: none;
             border-radius: 8px;
             padding: 12px;
             font-weight: 600;
-            transition: all 0.3s ease;
         }
         
         .btn-primary:hover {
-            background: #1e3a8a;
-            transform: translateY(-1px);
+            background: #15803d;
         }
         
         .alert-success {
-            background: #d4edda;
-            border: 1px solid #c3e6cb;
-            color: #155724;
+            background: #dcfce7;
+            border: 1px solid #bbf7d0;
+            color: #166534;
             border-radius: 8px;
         }
         
         .alert-danger {
-            background: #f8d7da;
-            border: 1px solid #f5c6cb;
-            color: #721c24;
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #991b1b;
             border-radius: 8px;
         }
         
         .invalid-feedback {
-            color: #dc3545;
-            font-size: 14px;
+            color: #dc2626;
         }
         
         .icheck-primary input[type="checkbox"]:checked + label::before {
-            background-color: #1e40af;
-            border-color: #1e40af;
+            background-color: #16a34a;
+            border-color: #16a34a;
         }
         
         a {
-            color: #1e40af;
+            color: #16a34a;
             text-decoration: none;
         }
         
         a:hover {
-            color: #1e3a8a;
+            color: #15803d;
             text-decoration: underline;
         }
         
         .balance-icon {
-            color: #1e40af;
+            color: #16a34a;
             margin-right: 8px;
         }
     </style>
@@ -150,44 +133,32 @@
             <div class="card-body login-card-body">
                 <p class="login-box-msg">Masuk ke akun Anda</p>
 
-                @if (session('status'))
-                    <div class="alert alert-success">{{ session('status') }}</div>
-                @endif
-
-                @if (session('success'))
-                    <div class="alert alert-success">{{ session('success') }}</div>
-                @endif
-
-                @if (session('error'))
-                    <div class="alert alert-danger">{{ session('error') }}</div>
-                @endif
+                <!-- Session Messages -->
+                <div class="alert alert-success" style="display: none;">Success message</div>
+                <div class="alert alert-danger" style="display: none;">Error message</div>
 
                 <form method="POST" action="{{ route('login') }}">
                     @csrf
                     <div class="input-group mb-3">
-                        <input type="email" name="email" class="form-control @error('email') is-invalid @enderror" 
+                        <input type="email" name="email" class="form-control" 
                                placeholder="Email" value="{{ old('email') }}" required>
                         <div class="input-group-append">
                             <div class="input-group-text">
                                 <span class="fas fa-envelope"></span>
                             </div>
                         </div>
-                        @error('email')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
+                        <div class="invalid-feedback"></div>
                     </div>
 
                     <div class="input-group mb-3">
-                        <input type="password" name="password" class="form-control @error('password') is-invalid @enderror" 
+                        <input type="password" name="password" class="form-control" 
                                placeholder="Password" required>
                         <div class="input-group-append">
                             <div class="input-group-text">
                                 <span class="fas fa-lock"></span>
                             </div>
                         </div>
-                        @error('password')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
+                        <div class="invalid-feedback"></div>
                     </div>
 
                     <div class="row">

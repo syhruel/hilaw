@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 
 class CustomRegisterController extends Controller
 {
@@ -20,33 +20,28 @@ class CustomRegisterController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users',
-            'password' => 'required|confirmed|min:6',
-            'foto' => 'required|image|max:10240', // 10MB
-            'keahlian' => 'required|string|max:255',
-            'pengalaman' => 'required|string',
-            'lulusan_universitas' => 'required|string|max:255',
-            'alamat' => 'required|string',
+            'password' => 'required|confirmed|min:8',
+        ], [
+            'name.required' => 'Nama lengkap wajib diisi',
+            'email.required' => 'Email wajib diisi',
+            'email.email' => 'Format email tidak valid',
+            'email.unique' => 'Email sudah digunakan',
+            'password.required' => 'Password wajib diisi',
+            'password.confirmed' => 'Konfirmasi password tidak cocok',
+            'password.min' => 'Password minimal 8 karakter',
         ]);
 
-        $fotoPath = null;
-        if ($request->hasFile('foto')) {
-            $fotoPath = $request->file('foto')->store('dokter-photos', 'public');
-        }
-
-        User::create([
+        $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'role' => 'dokter',
             'is_approved' => false,
-            'foto' => $fotoPath,
-            'keahlian' => $request->keahlian,
-            'pengalaman' => $request->pengalaman,
-            'lulusan_universitas' => $request->lulusan_universitas,
-            'alamat' => $request->alamat,
+            'approval_status' => 'pending',
         ]);
 
-        return redirect()->route('login')
-            ->with('success', 'Registrasi berhasil! Tunggu persetujuan admin.');
+        Auth::login($user);
+
+        return redirect()->route('dokter.pending')->with('success', 'Registrasi berhasil! Silakan lengkapi data profil Anda untuk menunggu persetujuan admin.');
     }
 }
