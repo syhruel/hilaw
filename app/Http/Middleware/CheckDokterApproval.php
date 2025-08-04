@@ -4,33 +4,42 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Illuminate\Support\Facades\Log;
 
 class CheckDokterApproval
 {
-    /**
-     * Handle an incoming request.
-     *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
-     */
-    public function handle(Request $request, Closure $next): Response
+    public function handle(Request $request, Closure $next)
     {
         $user = auth()->user();
         
-        Log::info('CheckDokterApproval middleware called', [
-            'route' => $request->route() ? $request->route()->getName() : 'unknown',
-            'user_id' => $user ? $user->id : null,
-            'user_role' => $user ? $user->role : null,
-            'is_approved' => $user ? $user->is_approved : null,
-            'approval_status' => $user ? $user->approval_status : null
-        ]);
-        
-        if ($user && $user->role === 'dokter' && !$user->is_approved) {
-            Log::warning('Dokter not approved, redirecting to pending');
-            return redirect()->route('dokter.pending')->with('warning', 'Akun Anda belum disetujui admin. Silakan tunggu persetujuan.');
+        // Pastikan user adalah dokter
+        if ($user->role !== 'dokter') {
+            \Log::warning('Non-dokter trying to access dokter route', [
+                'user_id' => $user->id,
+                'role' => $user->role
+            ]);
+            return redirect()->route('dashboard');
         }
-
+        
+        // Jika email belum diverifikasi, redirect ke verification
+        if (!$user->hasVerifiedEmail()) {
+            \Log::info('Dokter email not verified', [
+                'user_id' => $user->id,
+                'email' => $user->email
+            ]);
+            return redirect()->route('verification.notice')
+                ->with('error', 'Silakan verifikasi email Anda terlebih dahulu.');
+        }
+        
+        // Jika dokter belum diapprove, redirect ke pending
+        if (!$user->is_approved) {
+            \Log::info('Dokter not approved, redirecting to pending', [
+                'user_id' => $user->id,
+                'approval_status' => $user->approval_status
+            ]);
+            return redirect()->route('dokter.pending')
+                ->with('info', 'Akun Anda masih menunggu persetujuan admin.');
+        }
+        
         return $next($request);
     }
 }

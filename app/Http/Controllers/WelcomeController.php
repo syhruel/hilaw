@@ -9,14 +9,15 @@ class WelcomeController extends Controller
 {
     public function index()
     {
-        $doctors = User::where('role', 'dokter')
-                       ->where('is_approved', true) 
-                       ->whereNotNull('keahlian')
-                       ->where('keahlian', '!=', '')
-                       ->orderBy('is_online', 'desc')
-                       ->take(6)
-                       ->get();
+        $pengacara = User::where('role', 'dokter') 
+            ->where('is_approved', true)
+            ->where('approval_status', 'approved') 
+            ->whereNotNull('keahlian')
+            ->where('keahlian', '!=', '')
+            ->orderBy('is_online', 'desc')
+            ->take(6)
+            ->get();
 
-        return view('welcome', compact('doctors'));
+        return view('welcome', compact('pengacara'));
     }
 }

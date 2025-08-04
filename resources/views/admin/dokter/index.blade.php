@@ -1,15 +1,15 @@
 @extends('admin.layouts.app')
 
-@section('title', 'Kelola Dokter')
-@section('page-title', 'Kelola Dokter')
+@section('title', 'Kelola Ahli')
+@section('page-title', 'Kelola Ahli')
 
 @section('content')
 <div class="card">
     <div class="card-header">
-        <h3 class="card-title">Daftar Dokter</h3>
+        <h3 class="card-title">Daftar Ahli</h3>
         <div class="card-tools">
             <a href="{{ route('dokter.create') }}" class="btn btn-primary btn-sm">
-                <i class="fas fa-plus"></i> Tambah Dokter
+                <i class="fas fa-plus"></i> Tambah Ahli
             </a>
         </div>
     </div>
@@ -135,7 +135,7 @@
                             <tr>
                                 <td colspan="6" class="text-center py-4">
                                     <i class="fas fa-user-md fa-3x text-muted mb-3"></i>
-                                    <p class="text-muted">Belum ada dokter yang disetujui</p>
+                                    <p class="text-muted">Belum ada ahli yang disetujui</p>
                                 </td>
                             </tr>
                             @endif
@@ -210,7 +210,7 @@
                             <tr>
                                 <td colspan="6" class="text-center py-4">
                                     <i class="fas fa-user-times fa-3x text-muted mb-3"></i>
-                                    <p class="text-muted">Belum ada dokter yang ditolak</p>
+                                    <p class="text-muted">Belum ada ahli yang ditolak</p>
                                 </td>
                             </tr>
                             @endif
@@ -279,7 +279,7 @@
                             <tr>
                                 <td colspan="5" class="text-center py-4">
                                     <i class="fas fa-clock fa-3x text-muted mb-3"></i>
-                                    <p class="text-muted">Belum ada dokter yang menunggu persetujuan</p>
+                                    <p class="text-muted">Belum ada ahli yang menunggu persetujuan</p>
                                 </td>
                             </tr>
                             @endif

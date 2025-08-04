@@ -1,108 +1,99 @@
 @extends('admin.layouts.app')
 
-@section('title', 'Dashboard Dokter')
+@section('title', 'Dashboard Admin')
 @section('page-title', 'Dashboard')
 
 @section('content')
 @if(session('success'))
-<div class="alert alert-success alert-dismissible fade show" role="alert">
-    <i class="fas fa-check-circle me-2"></i>
-    <strong>{{ session('success') }}</strong>
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+<div class="position-fixed top-0 end-0 p-3" style="z-index: 1050;">
+    <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header" style="background-color: #4a5a4a; color: white;">
+            <i class="fas fa-check-circle me-2"></i>
+            <strong class="me-auto">Sukses</strong>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"></button>
+        </div>
+        <div class="toast-body">
+            {{ session('success') }}
+        </div>
+    </div>
 </div>
 @endif
 
-<div class="row">
-    <div class="col-lg-3 col-6">
-        <div class="small-box bg-info">
-            <div class="inner">
-                <h3>{{ $stats['total_konsultasi'] ?? 0 }}</h3>
-                <p>Total Konsultasi</p>
-            </div>
-            <div class="icon">
-                <i class="fas fa-stethoscope"></i>
-            </div>
-        </div>
-    </div>
-    
-    <div class="col-lg-3 col-6">
-        <div class="small-box bg-warning">
-            <div class="inner">
-                <h3>{{ $stats['konsultasi_pending'] ?? 0 }}</h3>
-                <p>Konsultasi Pending</p>
-            </div>
-            <div class="icon">
-                <i class="fas fa-clock"></i>
-            </div>
-        </div>
-    </div>
-    
-    <div class="col-lg-3 col-6">
-        <div class="small-box bg-success">
-            <div class="inner">
-                <h3>{{ $stats['konsultasi_selesai'] ?? 0 }}</h3>
-                <p>Konsultasi Selesai</p>
-            </div>
-            <div class="icon">
-                <i class="fas fa-check-circle"></i>
-            </div>
-        </div>
-    </div>
-    
-    <div class="col-lg-3 col-6">
-        <div class="small-box bg-danger">
-            <div class="inner">
-                <h3>Rp {{ number_format($stats['total_pendapatan'] ?? 0, 0, ',', '.') }}</h3>
-                <p>Total Pendapatan</p>
-            </div>
-            <div class="icon">
-                <i class="fas fa-money-bill-wave"></i>
+<!-- Header Section -->
+<div class="mb-5">
+    <div class="bg-white rounded-3 shadow-sm p-5" style="border-left: 6px solid #4a5a4a;">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <div class="d-flex align-items-center mb-3">
+                    <div class="me-4">
+                        <div class="rounded-circle d-flex align-items-center justify-content-center" style="width: 80px; height: 80px; background-color: #4a5a4a;">
+                            <i class="fas fa-balance-scale text-white" style="font-size: 2rem;"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <h1 class="fw-bold mb-2" style="color: #4a5a4a;">HiLaw Admin Dashboard</h1>
+                        <p class="text-muted mb-0 fs-5">Sistem Manajemen Platform Konsultasi Hukum</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
-<div class="card">
-    <div class="card-header">
-        <h3 class="card-title">Selamat Datang, Dr. {{ auth()->user()->name }}!</h3>
-    </div>
-    <div class="card-body">
-        <p>Selamat datang di dashboard dokter. Anda dapat mengelola konsultasi dan profil Anda dari sini.</p>
-        
-        <div class="row mt-4">
-            <div class="col-md-6">
-                <div class="card card-outline card-primary">
-                    <div class="card-header">
-                        <h5 class="card-title">Informasi Profil</h5>
-                    </div>
-                    <div class="card-body">
-                        <p><strong>Keahlian:</strong> {{ auth()->user()->keahlian ?? 'Belum diisi' }}</p>
-                        <p><strong>Pengalaman:</strong> {{ auth()->user()->pengalaman_tahun ?? 0 }} tahun</p>
-                        <p><strong>Jadwal Kerja:</strong> {{ auth()->user()->jadwal_kerja ?? 'Belum diatur' }}</p>
-                        <p><strong>Tarif Konsultasi:</strong> Rp {{ number_format(auth()->user()->tarif_konsultasi ?? 0, 0, ',', '.') }}</p>
-                    </div>
+<!-- Statistics Grid -->
+<div class="row g-4 mb-5">
+    <div class="col-lg-3 col-md-6">
+        <div class="bg-white rounded-3 shadow-sm p-4 h-100">
+            <div class="d-flex align-items-center justify-content-between">
+                <div>
+                    <div class="fs-2 fw-bold" style="color: #4a5a4a;">{{ $stats['total_dokter'] }}</div>
+                    <div class="text-muted">Advokat Terdaftar</div>
+                </div>
+                <div class="rounded-3 p-3" style="background-color: rgba(74, 90, 74, 0.1);">
+                    <i class="fas fa-balance-scale fs-2" style="color: #4a5a4a;"></i>
                 </div>
             </div>
-            
-            <div class="col-md-6">
-                <div class="card card-outline card-info">
-                    <div class="card-header">
-                        <h5 class="card-title">Quick Actions</h5>
-                    </div>
-                    <div class="card-body">
-                        <a href="#" class="btn btn-primary btn-block mb-2">
-                            <i class="fas fa-calendar-alt"></i> Lihat Jadwal Konsultasi
-                        </a>
-                        <a href="#" class="btn btn-success btn-block mb-2">
-                            <i class="fas fa-user-edit"></i> Edit Profil
-                        </a>
-                        <a href="#" class="btn btn-info btn-block">
-                            <i class="fas fa-history"></i> Riwayat Konsultasi
-                        </a>
-                    </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6">
+        <div class="bg-white rounded-3 shadow-sm p-4 h-100">
+            <div class="d-flex align-items-center justify-content-between">
+                <div>
+                    <div class="fs-2 fw-bold" style="color: #4a5a4a;">{{ $stats['total_pengguna'] }}</div>
+                    <div class="text-muted">Klien Aktif</div>
+                </div>
+                <div class="rounded-3 p-3" style="background-color: rgba(74, 90, 74, 0.1);">
+                    <i class="fas fa-users fs-2" style="color: #4a5a4a;"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6">
+        <div class="bg-white rounded-3 shadow-sm p-4 h-100">
+            <div class="d-flex align-items-center justify-content-between">
+                <div>
+                    <div class="fs-2 fw-bold" style="color: #4a5a4a;">{{ $stats['total_konsultasi'] }}</div>
+                    <div class="text-muted">Total Konsultasi</div>
+                </div>
+                <div class="rounded-3 p-3" style="background-color: rgba(74, 90, 74, 0.1);">
+                    <i class="fas fa-gavel fs-2" style="color: #4a5a4a;"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6">
+        <div class="bg-white rounded-3 shadow-sm p-4 h-100">
+            <div class="d-flex align-items-center justify-content-between">
+                <div>
+                    <div class="fs-2 fw-bold" style="color: #4a5a4a;">Rp {{ number_format($stats['total_pembayaran'], 0, ',', '.') }}</div>
+                    <div class="text-muted">Total Pendapatan</div>
+                </div>
+                <div class="rounded-3 p-3" style="background-color: rgba(74, 90, 74, 0.1);">
+                    <i class="fas fa-money-bill-wave fs-2" style="color: #4a5a4a;"></i>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
 @endsection

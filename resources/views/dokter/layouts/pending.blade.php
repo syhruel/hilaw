@@ -41,7 +41,7 @@
     <aside class="main-sidebar sidebar-dark-primary elevation-4">
         <!-- Brand Logo -->
         <a href="#" class="brand-link text-center">
-            <span class="brand-text font-weight-light">Dokter Panel</span>
+            <span class="brand-text font-weight-light">Ahli Panel</span>
         </a>
 
         <!-- Sidebar -->
@@ -104,7 +104,7 @@
 
     <!-- Footer -->
     <footer class="main-footer text-center">
-        <strong>&copy; {{ date('Y') }} HILAW Dokter Panel.</strong> All rights reserved.
+        <strong>&copy; {{ date('Y') }} HILAW Ahli Panel.</strong> All rights reserved.
     </footer>
 </div>
 

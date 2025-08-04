@@ -1,4 +1,5 @@
 <?php
+
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -14,6 +15,8 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'check.dokter.approval' => \App\Http\Middleware\CheckDokterApproval::class,
             'role' => \App\Http\Middleware\RoleMiddleware::class,
+            'check.suspended' => \App\Http\Middleware\CheckSuspended::class,
+            'update.last.active' => \App\Http\Middleware\UpdateLastActive::class, 
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

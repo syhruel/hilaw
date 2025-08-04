@@ -51,6 +51,11 @@ class Consultation extends Model
         return $this->hasMany(Message::class);
     }
 
+    public function invoice()
+    {
+        return $this->hasOne(Invoice::class);
+    }
+
     // Accessors
     public function getTotalDurationSecondsAttribute()
     {

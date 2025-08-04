@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>@yield('title', 'Dokter Dashboard')</title>
+    <title>@yield('title', 'Ahli Dashboard')</title>
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -41,7 +41,7 @@
     <aside class="main-sidebar sidebar-dark-primary elevation-4">
         <!-- Brand Logo -->
         <a href="{{ route('dokter.dashboard') }}" class="brand-link text-center">
-            <span class="brand-text font-weight-light">Dokter Panel</span>
+            <span class="brand-text font-weight-light">Ahli Panel</span>
         </a>
 
         <!-- Sidebar -->
@@ -122,7 +122,7 @@
 
     <!-- Footer -->
     <footer class="main-footer text-center">
-        <strong>&copy; {{ date('Y') }} HILAW Dokter Panel.</strong> All rights reserved.
+        <strong>&copy; {{ date('Y') }} HILAW Ahli Panel.</strong> All rights reserved.
     </footer>
 </div>
 

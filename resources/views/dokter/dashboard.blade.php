@@ -1,7 +1,7 @@
 @extends('dokter.layouts.app')
 
-@section('title', 'Dokter Dashboard')
-@section('page-title', 'Dashboard Dokter')
+@section('title', 'Ahli Dashboard')
+@section('page-title', 'Dashboard Ahli')
 
 @section('content')
 <!-- Notifikasi Persetujuan Akun -->
@@ -102,7 +102,7 @@
                 <div class="alert {{ auth()->user()->is_online ? 'alert-success' : 'alert-secondary' }} mb-3" role="alert">
                     <h6 class="alert-heading">
                         <i class="fas fa-info-circle me-2"></i>
-                        Ini adalah dashboard dokter untuk mengelola konsultasi dan pembayaran.
+                        Ini adalah dashboard ahli untuk mengelola konsultasi dan pembayaran.
                     </h6>
                     <hr>
                     <p class="mb-2">

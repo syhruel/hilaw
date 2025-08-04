@@ -139,7 +139,7 @@
                                             <div class="form-group">
                                                 <label for="name">Nama Lengkap <span class="text-danger">*</span></label>
                                                 <input type="text" class="form-control @error('name') is-invalid @enderror" 
-                                                       id="name" name="name" value="{{ old('name') ?: auth()->user()->name }}" required>
+                                                       id="name" name="name" value="{{ old('name', auth()->user()->name) }}" required>
                                                 @error('name')
                                                     <div class="invalid-feedback">{{ $message }}</div>
                                                 @enderror
@@ -150,7 +150,7 @@
                                             <div class="form-group">
                                                 <label for="email">Email <span class="text-danger">*</span></label>
                                                 <input type="email" class="form-control @error('email') is-invalid @enderror" 
-                                                       id="email" name="email" value="{{ old('email') ?: auth()->user()->email }}" required>
+                                                       id="email" name="email" value="{{ old('email', auth()->user()->email) }}" required>
                                                 @error('email')
                                                     <div class="invalid-feedback">{{ $message }}</div>
                                                 @enderror
@@ -161,47 +161,86 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group">
+                                                <label for="phone">Nomor Telepon <span class="text-danger">*</span></label>
+                                                <input type="tel" class="form-control @error('phone') is-invalid @enderror" 
+                                                       id="phone" name="phone" value="{{ old('phone', auth()->user()->phone) }}" 
+                                                       placeholder="Contoh: 08123456789" required>
+                                                @error('phone')
+                                                    <div class="invalid-feedback">{{ $message }}</div>
+                                                @enderror
+                                                <small class="form-text text-muted">Format: 08xxxxxxxxxx atau +62xxxxxxxxxx</small>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="gender">Jenis Kelamin <span class="text-danger">*</span></label>
+                                                <select class="form-control @error('gender') is-invalid @enderror" 
+                                                        id="gender" name="gender" required>
+                                                    <option value="">Pilih Jenis Kelamin</option>
+                                                    <option value="male" {{ old('gender', auth()->user()->gender) == 'male' ? 'selected' : '' }}>Laki-laki</option>
+                                                    <option value="female" {{ old('gender', auth()->user()->gender) == 'female' ? 'selected' : '' }}>Perempuan</option>
+                                                </select>
+                                                @error('gender')
+                                                    <div class="invalid-feedback">{{ $message }}</div>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="date_of_birth">Tanggal Lahir</label>
+                                                @php
+                                                    $dateOfBirth = old('date_of_birth');
+                                                    if (!$dateOfBirth && auth()->user()->date_of_birth) {
+                                                        $dateOfBirth = auth()->user()->date_of_birth instanceof \Carbon\Carbon 
+                                                            ? auth()->user()->date_of_birth->format('Y-m-d')
+                                                            : auth()->user()->date_of_birth;
+                                                    }
+                                                @endphp
+                                                <input type="date" class="form-control @error('date_of_birth') is-invalid @enderror" 
+                                                       id="date_of_birth" name="date_of_birth" 
+                                                       value="{{ $dateOfBirth }}">
+                                                @error('date_of_birth')
+                                                    <div class="invalid-feedback">{{ $message }}</div>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
                                                 <label for="keahlian">Spesialisasi/Keahlian <span class="text-danger">*</span></label>
                                                 <input type="text" class="form-control @error('keahlian') is-invalid @enderror" 
-                                                       id="keahlian" name="keahlian" value="{{ old('keahlian') ?: auth()->user()->keahlian }}" 
-                                                       placeholder="" required>
+                                                       id="keahlian" name="keahlian" value="{{ old('keahlian', auth()->user()->keahlian) }}" 
+                                                       placeholder="Contoh: Hukum Pidana, Hukum Perdata" required>
                                                 @error('keahlian')
                                                     <div class="invalid-feedback">{{ $message }}</div>
                                                 @enderror
                                             </div>
                                         </div>
+                                    </div>
+
+                                    <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="lulusan_universitas">Lulusan Universitas <span class="text-danger">*</span></label>
                                                 <input type="text" class="form-control @error('lulusan_universitas') is-invalid @enderror" 
                                                        id="lulusan_universitas" name="lulusan_universitas" 
-                                                       value="{{ old('lulusan_universitas') ?: auth()->user()->lulusan_universitas }}" required>
+                                                       value="{{ old('lulusan_universitas', auth()->user()->lulusan_universitas) }}" 
+                                                       placeholder="Contoh: Universitas Indonesia" required>
                                                 @error('lulusan_universitas')
                                                     <div class="invalid-feedback">{{ $message }}</div>
                                                 @enderror
                                             </div>
                                         </div>
-                                    </div>
-
-                                    <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="pengalaman_tahun">Pengalaman (Tahun) <span class="text-danger">*</span></label>
                                                 <input type="number" class="form-control @error('pengalaman_tahun') is-invalid @enderror" 
                                                        id="pengalaman_tahun" name="pengalaman_tahun" min="0" max="50"
-                                                       value="{{ old('pengalaman_tahun') ?: auth()->user()->pengalaman_tahun }}" required>
+                                                       value="{{ old('pengalaman_tahun', auth()->user()->pengalaman_tahun) }}" required>
                                                 @error('pengalaman_tahun')
-                                                    <div class="invalid-feedback">{{ $message }}</div>
-                                                @enderror
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="tarif_konsultasi">Tarif Konsultasi <span class="text-danger">*</span></label>
-                                                <input type="number" class="form-control @error('tarif_konsultasi') is-invalid @enderror" 
-                                                       id="tarif_konsultasi" name="tarif_konsultasi" min="0" step="1000"
-                                                       value="{{ old('tarif_konsultasi') ?: auth()->user()->tarif_konsultasi }}" required>
-                                                @error('tarif_konsultasi')
                                                     <div class="invalid-feedback">{{ $message }}</div>
                                                 @enderror
                                             </div>
@@ -209,11 +248,25 @@
                                     </div>
 
                                     <div class="row">
-                                        <div class="col-12">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="tarif_konsultasi">Tarif Konsultasi (Rupiah) <span class="text-danger">*</span></label>
+                                                <input type="number" class="form-control @error('tarif_konsultasi') is-invalid @enderror" 
+                                                       id="tarif_konsultasi" name="tarif_konsultasi" min="0" step="1000"
+                                                       value="{{ old('tarif_konsultasi', auth()->user()->tarif_konsultasi) }}" 
+                                                       placeholder="Contoh: 50000" required>
+                                                @error('tarif_konsultasi')
+                                                    <div class="invalid-feedback">{{ $message }}</div>
+                                                @enderror
+                                                <small class="form-text text-muted">Masukkan tarif dalam rupiah tanpa titik atau koma</small>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="pengalaman_deskripsi">Deskripsi Pengalaman <span class="text-danger">*</span></label>
                                                 <textarea class="form-control @error('pengalaman_deskripsi') is-invalid @enderror" 
-                                                          id="pengalaman_deskripsi" name="pengalaman_deskripsi" rows="3" required>{{ old('pengalaman_deskripsi') ?: auth()->user()->pengalaman_deskripsi }}</textarea>
+                                                          id="pengalaman_deskripsi" name="pengalaman_deskripsi" rows="3" 
+                                                          placeholder="Deskripsikan pengalaman kerja Anda..." required>{{ old('pengalaman_deskripsi', auth()->user()->pengalaman_deskripsi) }}</textarea>
                                                 @error('pengalaman_deskripsi')
                                                     <div class="invalid-feedback">{{ $message }}</div>
                                                 @enderror
@@ -224,9 +277,10 @@
                                     <div class="row">
                                         <div class="col-12">
                                             <div class="form-group">
-                                                <label for="alamat">Alamat <span class="text-danger">*</span></label>
+                                                <label for="alamat">Alamat Kantor/Praktik <span class="text-danger">*</span></label>
                                                 <textarea class="form-control @error('alamat') is-invalid @enderror" 
-                                                          id="alamat" name="alamat" rows="2" required>{{ old('alamat') ?: auth()->user()->alamat }}</textarea>
+                                                          id="alamat" name="alamat" rows="2" 
+                                                          placeholder="Alamat lengkap kantor atau tempat praktik..." required>{{ old('alamat', auth()->user()->alamat) }}</textarea>
                                                 @error('alamat')
                                                     <div class="invalid-feedback">{{ $message }}</div>
                                                 @enderror
@@ -243,10 +297,10 @@
                                 </div>
                                 <div class="card-body">
                                     @php
-                                        $hari_mulai = old('hari_mulai') ?: auth()->user()->hari_mulai;
-                                        $hari_selesai = old('hari_selesai') ?: auth()->user()->hari_selesai;
-                                        $jam_mulai = old('jam_mulai') ?: auth()->user()->jam_mulai;
-                                        $jam_selesai = old('jam_selesai') ?: auth()->user()->jam_selesai;
+                                        $hari_mulai = old('hari_mulai', auth()->user()->hari_mulai);
+                                        $hari_selesai = old('hari_selesai', auth()->user()->hari_selesai);
+                                        $jam_mulai = old('jam_mulai', auth()->user()->jam_mulai);
+                                        $jam_selesai = old('jam_selesai', auth()->user()->jam_selesai);
                                     @endphp
                                     
                                     <div class="row">

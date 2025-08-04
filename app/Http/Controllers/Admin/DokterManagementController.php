@@ -40,46 +40,140 @@ class DokterManagementController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users',
             'password' => 'required|min:6',
-            'foto' => 'nullable|image|max:10240',
+            'foto' => 'nullable|image|mimes:jpeg,jpg,png|max:102400',
+            'sertifikat' => 'nullable|file|mimes:pdf,jpeg,jpg,png|max:102400',
             'keahlian' => 'required|string|max:255',
-            'pengalaman' => 'required|string',
+            'pengalaman_tahun' => 'required|integer|min:0|max:50',
+            'pengalaman_deskripsi' => 'required|string',
             'lulusan_universitas' => 'required|string|max:255',
             'alamat' => 'required|string',
-            'tarif_konsultasi' => 'required|numeric|min:0',
-            'hari_mulai' => 'required|string',
-            'hari_selesai' => 'nullable|string',
-            'jam_mulai' => 'required',
-            'jam_selesai' => 'required',
+            'tarif_konsultasi' => 'required|string', // Ubah ke string karena ada formatting
+            'hari_mulai' => 'required|string|in:Senin,Selasa,Rabu,Kamis,Jumat,Sabtu,Minggu',
+            'hari_selesai' => 'nullable|string|in:Senin,Selasa,Rabu,Kamis,Jumat,Sabtu,Minggu',
+            'jam_mulai' => 'required|date_format:H:i',
+            'jam_selesai' => 'required|date_format:H:i|after:jam_mulai',
+            'is_online' => 'boolean',
+        ], [
+            'name.required' => 'Nama ahli hukum wajib diisi',
+            'email.required' => 'Email wajib diisi',
+            'email.email' => 'Format email tidak valid',
+            'email.unique' => 'Email sudah terdaftar',
+            'password.required' => 'Password wajib diisi',
+            'password.min' => 'Password minimal 6 karakter',
+            'foto.image' => 'File foto harus berupa gambar',
+            'foto.mimes' => 'Format foto harus JPEG, JPG, atau PNG',
+            'foto.max' => 'Ukuran foto maksimal 10MB',
+            'sertifikat.mimes' => 'Format sertifikat harus PDF, JPEG, JPG, atau PNG',
+            'sertifikat.max' => 'Ukuran sertifikat maksimal 10MB',
+            'keahlian.required' => 'Bidang keahlian hukum wajib diisi',
+            'pengalaman_tahun.required' => 'Pengalaman tahun wajib diisi',
+            'pengalaman_tahun.integer' => 'Pengalaman tahun harus berupa angka',
+            'pengalaman_tahun.min' => 'Pengalaman tahun minimal 0',
+            'pengalaman_tahun.max' => 'Pengalaman tahun maksimal 50',
+            'pengalaman_deskripsi.required' => 'Deskripsi pengalaman wajib diisi',
+            'lulusan_universitas.required' => 'Lulusan universitas wajib diisi',
+            'alamat.required' => 'Alamat kantor/praktik wajib diisi',
+            'tarif_konsultasi.required' => 'Tarif konsultasi wajib diisi',
+            'hari_mulai.required' => 'Hari mulai wajib dipilih',
+            'hari_mulai.in' => 'Hari mulai tidak valid',
+            'hari_selesai.in' => 'Hari selesai tidak valid',
+            'jam_mulai.required' => 'Jam mulai wajib diisi',
+            'jam_mulai.date_format' => 'Format jam mulai tidak valid',
+            'jam_selesai.required' => 'Jam selesai wajib diisi',
+            'jam_selesai.date_format' => 'Format jam selesai tidak valid',
+            'jam_selesai.after' => 'Jam selesai harus lebih besar dari jam mulai',
         ]);
 
-        $fotoPath = null;
-        if ($request->hasFile('foto')) {
-            $fotoPath = $request->file('foto')->store('dokter-photos', 'public');
+        try {
+            // Bersihkan format tarif konsultasi (hapus titik pemisah ribuan)
+            $tarif_konsultasi = (float) str_replace('.', '', $request->tarif_konsultasi);
+
+            // Handle file uploads
+            $fotoPath = null;
+            if ($request->hasFile('foto')) {
+                $foto = $request->file('foto');
+                $fotoName = time() . '_' . uniqid() . '.' . $foto->getClientOriginalExtension();
+                $fotoPath = $foto->storeAs('dokter-photos', $fotoName, 'public');
+            }
+
+            $sertifikatPath = null;
+            if ($request->hasFile('sertifikat')) {
+                $sertifikat = $request->file('sertifikat');
+                $sertifikatName = time() . '_' . uniqid() . '.' . $sertifikat->getClientOriginalExtension();
+                $sertifikatPath = $sertifikat->storeAs('dokter/sertifikat/approved', $sertifikatName, 'public');
+            }
+
+            // Build jadwal kerja string
+            $jadwal_kerja = $request->hari_mulai;
+            
+            // If hari_selesai is provided and different from hari_mulai, create range
+            if ($request->filled('hari_selesai') && $request->hari_selesai !== $request->hari_mulai) {
+                $jadwal_kerja .= '-' . $request->hari_selesai;
+            }
+            
+            $jadwal_kerja .= ': ' . $request->jam_mulai . ' - ' . $request->jam_selesai;
+
+            // AUTO APPROVE: Dokter yang dibuat admin selalu langsung terverifikasi
+            $isApproved = true; // Selalu true untuk dokter yang dibuat admin
+            $approvalStatus = 'approved'; // Selalu approved
+
+            // Create dokter
+            $dokter = User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'email_verified_at' => now(), // ✅ TAMBAHAN: Set email sebagai terverifikasi
+                'password' => Hash::make($request->password),
+                'role' => 'dokter',
+                'is_approved' => $isApproved, // Selalu true
+                'approval_status' => $approvalStatus, // Selalu approved
+                'is_online' => $request->has('is_online') && $request->is_online,
+                'foto' => $fotoPath,
+                'sertifikat' => $sertifikatPath,
+                'keahlian' => $request->keahlian,
+                'pengalaman_tahun' => $request->pengalaman_tahun,
+                'pengalaman_deskripsi' => $request->pengalaman_deskripsi,
+                'lulusan_universitas' => $request->lulusan_universitas,
+                'alamat' => $request->alamat,
+                'tarif_konsultasi' => $tarif_konsultasi,
+                'jadwal_kerja' => $jadwal_kerja,
+                // Hapus verified_at dan verified_by karena kolom tidak ada
+            ]);
+
+            // Log the activity
+            Log::info('New dokter created and auto-approved by admin', [
+                'dokter_id' => $dokter->id,
+                'dokter_name' => $dokter->name,
+                'dokter_email' => $dokter->email,
+                'created_by' => auth()->user()->name ?? 'System',
+                'created_by_id' => auth()->user()->id ?? null,
+                'approval_status' => $approvalStatus,
+                'auto_approved' => true,
+                'email_verified' => true // ✅ TAMBAHAN: Log email verification
+            ]);
+
+            $message = 'Ahli hukum "' . $dokter->name . '" berhasil ditambahkan, otomatis terverifikasi, dan email sudah diaktifkan';
+
+            return redirect()->route('dokter.index')->with('success', $message);
+
+        } catch (\Exception $e) {
+            // Log error
+            Log::error('Error creating ahli hukum: ' . $e->getMessage(), [
+                'request_data' => $request->except(['password', 'foto', 'sertifikat']),
+                'error_trace' => $e->getTraceAsString()
+            ]);
+
+            // Clean up uploaded files if database creation failed
+            if (isset($fotoPath) && $fotoPath && Storage::disk('public')->exists($fotoPath)) {
+                Storage::disk('public')->delete($fotoPath);
+            }
+            if (isset($sertifikatPath) && $sertifikatPath && Storage::disk('public')->exists($sertifikatPath)) {
+                Storage::disk('public')->delete($sertifikatPath);
+            }
+
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Terjadi kesalahan saat menambahkan ahli hukum: ' . $e->getMessage());
         }
-
-        $jadwal_kerja = $request->hari_mulai;
-        if ($request->filled('hari_selesai') && $request->hari_selesai !== $request->hari_mulai) {
-            $jadwal_kerja .= '-' . $request->hari_selesai;
-        }
-        $jadwal_kerja .= ' ' . $request->jam_mulai . '-' . $request->jam_selesai;
-
-        User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'role' => 'dokter',
-            'is_approved' => true,
-            'approval_status' => 'approved',
-            'foto' => $fotoPath,
-            'keahlian' => $request->keahlian,
-            'pengalaman' => $request->pengalaman,
-            'lulusan_universitas' => $request->lulusan_universitas,
-            'alamat' => $request->alamat,
-            'tarif_konsultasi' => $request->tarif_konsultasi,
-            'jadwal_kerja' => $jadwal_kerja,
-        ]);
-
-        return redirect()->route('dokter.index')->with('success', 'Dokter berhasil ditambahkan');
     }
 
     public function edit($id)
@@ -89,7 +183,7 @@ class DokterManagementController extends Controller
         if ($dokter->role !== 'dokter') {
             abort(404);
         }
-        
+
         return view('admin.dokter.edit', compact('dokter'));
     }
 
@@ -104,41 +198,128 @@ class DokterManagementController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $dokter->id,
-            'foto' => 'nullable|image|max:10240',
-            'sertifikat' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:10240',
+            'foto' => 'nullable|image|mimes:jpeg,jpg,png|max:102400',
+            'sertifikat' => 'nullable|file|mimes:pdf,jpeg,jpg,png|max:102400',
             'keahlian' => 'required|string|max:255',
-            'pengalaman' => 'required|string',
+            'pengalaman_tahun' => 'required|integer|min:0|max:50',
+            'pengalaman' => 'required|string', // Ubah dari pengalaman_deskripsi ke pengalaman
             'lulusan_universitas' => 'required|string|max:255',
             'alamat' => 'required|string',
-            'tarif_konsultasi' => 'required|numeric|min:0',
+            'tarif_konsultasi' => 'required|string', // Ubah ke string karena ada formatting
+            'hari_mulai' => 'nullable|string|in:Senin,Selasa,Rabu,Kamis,Jumat,Sabtu,Minggu',
+            'hari_selesai' => 'nullable|string|in:Senin,Selasa,Rabu,Kamis,Jumat,Sabtu,Minggu',
+            'jam_mulai' => 'nullable|date_format:H:i',
+            'jam_selesai' => 'nullable|date_format:H:i|after:jam_mulai',
+            'is_online' => 'boolean',
+        ], [
+            'name.required' => 'Nama ahli hukum wajib diisi',
+            'email.required' => 'Email wajib diisi',
+            'email.email' => 'Format email tidak valid',
+            'email.unique' => 'Email sudah terdaftar',
+            'foto.image' => 'File foto harus berupa gambar',
+            'foto.mimes' => 'Format foto harus JPEG, JPG, atau PNG',
+            'foto.max' => 'Ukuran foto maksimal 10MB',
+            'sertifikat.mimes' => 'Format sertifikat harus PDF, JPEG, JPG, atau PNG',
+            'sertifikat.max' => 'Ukuran sertifikat maksimal 10MB',
+            'keahlian.required' => 'Bidang keahlian hukum wajib diisi',
+            'pengalaman_tahun.required' => 'Pengalaman tahun wajib diisi',
+            'pengalaman_tahun.integer' => 'Pengalaman tahun harus berupa angka',
+            'pengalaman_tahun.min' => 'Pengalaman tahun minimal 0',
+            'pengalaman_tahun.max' => 'Pengalaman tahun maksimal 50',
+            'pengalaman.required' => 'Deskripsi pengalaman wajib diisi', // Ubah pesan error
+            'lulusan_universitas.required' => 'Lulusan universitas wajib diisi',
+            'alamat.required' => 'Alamat kantor/praktik wajib diisi',
+            'tarif_konsultasi.required' => 'Tarif konsultasi wajib diisi',
+            'hari_mulai.in' => 'Hari mulai tidak valid',
+            'hari_selesai.in' => 'Hari selesai tidak valid',
+            'jam_mulai.date_format' => 'Format jam mulai tidak valid',
+            'jam_selesai.date_format' => 'Format jam selesai tidak valid',
+            'jam_selesai.after' => 'Jam selesai harus lebih besar dari jam mulai',
         ]);
 
-        $changes = $request->only([
-            'name', 'email', 'keahlian', 'pengalaman', 
-            'lulusan_universitas', 'alamat', 'tarif_konsultasi'
-        ]);
+        try {
+            // Bersihkan format tarif konsultasi (hapus titik pemisah ribuan)
+            $tarif_konsultasi = (float) str_replace('.', '', $request->tarif_konsultasi);
 
-        if ($request->hasFile('foto')) {
-            $changes['foto'] = $request->file('foto')->store('dokter-photos', 'public');
+            // Handle file uploads
+            $updateData = [
+                'name' => $request->name,
+                'email' => $request->email,
+                'keahlian' => $request->keahlian,
+                'pengalaman_tahun' => $request->pengalaman_tahun,
+                'pengalaman_deskripsi' => $request->pengalaman, // Simpan ke pengalaman_deskripsi
+                'lulusan_universitas' => $request->lulusan_universitas,
+                'alamat' => $request->alamat,
+                'tarif_konsultasi' => $tarif_konsultasi,
+                'is_online' => $request->has('is_online') && $request->is_online,
+            ];
+
+            // Build jadwal kerja string hanya jika semua field jadwal diisi
+            if ($request->filled('hari_mulai') && $request->filled('jam_mulai') && $request->filled('jam_selesai')) {
+                $jadwal_kerja = $request->hari_mulai;
+                
+                // If hari_selesai is provided and different from hari_mulai, create range
+                if ($request->filled('hari_selesai') && $request->hari_selesai !== $request->hari_mulai) {
+                    $jadwal_kerja .= '-' . $request->hari_selesai;
+                }
+                
+                $jadwal_kerja .= ': ' . $request->jam_mulai . ' - ' . $request->jam_selesai;
+                $updateData['jadwal_kerja'] = $jadwal_kerja;
+            }
+
+            // Handle foto upload
+            if ($request->hasFile('foto')) {
+                // Delete old foto if exists
+                if ($dokter->foto && Storage::disk('public')->exists($dokter->foto)) {
+                    Storage::disk('public')->delete($dokter->foto);
+                }
+                
+                $foto = $request->file('foto');
+                $fotoName = time() . '_' . uniqid() . '.' . $foto->getClientOriginalExtension();
+                $fotoPath = $foto->storeAs('dokter-photos', $fotoName, 'public');
+                $updateData['foto'] = $fotoPath;
+            }
+
+            // Handle sertifikat upload
+            if ($request->hasFile('sertifikat')) {
+                // Delete old sertifikat if exists
+                if ($dokter->sertifikat && Storage::disk('public')->exists($dokter->sertifikat)) {
+                    Storage::disk('public')->delete($dokter->sertifikat);
+                }
+                
+                $sertifikat = $request->file('sertifikat');
+                $sertifikatName = time() . '_' . uniqid() . '.' . $sertifikat->getClientOriginalExtension();
+                $sertifikatPath = $sertifikat->storeAs('dokter/sertifikat/approved', $sertifikatName, 'public');
+                $updateData['sertifikat'] = $sertifikatPath;
+            }
+
+            // Update the dokter
+            $dokter->update($updateData);
+
+            // Log the activity
+            Log::info('Ahli hukum updated by admin', [
+                'dokter_id' => $dokter->id,
+                'dokter_name' => $dokter->name,
+                'dokter_email' => $dokter->email,
+                'updated_by' => auth()->user()->name ?? 'System',
+                'changes' => array_keys($updateData)
+            ]);
+
+            return redirect()->route('dokter.show', $dokter->id)
+                ->with('success', 'Data ahli hukum "' . $dokter->name . '" berhasil diperbarui');
+
+        } catch (\Exception $e) {
+            // Log error
+            Log::error('Error updating ahli hukum: ' . $e->getMessage(), [
+                'dokter_id' => $dokter->id,
+                'request_data' => $request->except(['foto', 'sertifikat']),
+                'error_trace' => $e->getTraceAsString()
+            ]);
+
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Terjadi kesalahan saat memperbarui data ahli hukum: ' . $e->getMessage());
         }
-
-        if ($request->hasFile('sertifikat')) {
-            $changes['sertifikat'] = $request->file('sertifikat')->store('dokter-certificates', 'public');
-        }
-
-        $oldData = $dokter->only([
-            'name', 'email', 'keahlian', 'pengalaman', 
-            'lulusan_universitas', 'alamat', 'tarif_konsultasi', 'foto', 'sertifikat'
-        ]);
-
-        ProfileChange::create([
-            'user_id' => $dokter->id,
-            'changes' => json_encode($changes),
-            'old_data' => json_encode($oldData),
-            'status' => 'pending'
-        ]);
-
-        return redirect()->route('dokter.index')->with('success', 'Pengajuan perubahan profil berhasil dikirim. Menunggu persetujuan admin.');
     }
 
     public function destroy($id)
@@ -366,6 +547,7 @@ class DokterManagementController extends Controller
                 ->with('error', 'Terjadi kesalahan saat menolak perubahan profil: ' . $e->getMessage());
         }
     }
+    
     public function showProfileChange($changeId)
     {
         $change = ProfileChange::with('user')->findOrFail($changeId);

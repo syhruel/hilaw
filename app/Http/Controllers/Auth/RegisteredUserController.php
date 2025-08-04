@@ -1,5 +1,5 @@
 <?php
-// RegisteredUserController.php - FIXED
+
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
@@ -23,66 +23,72 @@ class RegisteredUserController extends Controller
     }
 
     /**
-     * Proses registrasi.
+     * Proses registrasi pengguna biasa.
      */
     public function store(Request $request): RedirectResponse
     {
         \Log::info('=== REGISTRATION START ===', [
             'email' => $request->email,
-            'role' => $request->role
+            'role' => $request->role ?? 'pengguna'
         ]);
 
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'role' => ['required', 'in:pengguna,dokter'],
+        ], [
+            'name.required' => 'Nama lengkap wajib diisi',
+            'email.required' => 'Email wajib diisi',
+            'email.email' => 'Format email tidak valid',
+            'email.unique' => 'Email sudah digunakan',
+            'password.required' => 'Password wajib diisi',
+            'password.confirmed' => 'Konfirmasi password tidak cocok',
         ]);
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'role' => $request->role,
-            'is_approved' => $request->role === 'dokter' ? false : true,
+            'role' => 'pengguna', 
+            'phone' => null, 
+            'gender' => null, 
+            'date_of_birth' => null, 
+            'foto' => null, 
+            'is_suspended' => false, // Default tidak suspended
+            'last_active_at' => now(), 
+            // Field untuk dokter (set default values)
+            'is_approved' => false,
+            'was_pending' => false,
+            'rejection_reason' => null,
+            'is_online' => false,
+            'tarif_konsultasi' => null,
+            'jadwal_kerja' => null,
+            'keahlian' => null,
+            'lulusan_universitas' => null,
+            'alamat' => null,
+            'pengalaman_tahun' => null,
+            'pengalaman_deskripsi' => null,
+            'sertifikat' => null,
         ]);
 
-        \Log::info('User created', [
+        \Log::info('Pengguna created', [
             'user_id' => $user->id,
             'role' => $user->role,
-            'is_approved' => $user->is_approved
+            'email' => $user->email,
+            'is_suspended' => $user->is_suspended,
+            'last_active_at' => $user->last_active_at
         ]);
 
+        // Kirim email verification
         event(new Registered($user));
+        
+        // Login user
         Auth::login($user);
 
-        \Log::info('User logged in', [
-            'auth_check' => auth()->check(),
-            'auth_user_id' => auth()->id()
-        ]);
-
-        if ($user->role === 'pengguna') {
-            \Log::info('=== REDIRECTING PENGGUNA ===');
-            return redirect()->route('pengguna.dashboard')->with('success', 'Registrasi berhasil!');
-        }
+        \Log::info('=== REDIRECTING TO EMAIL VERIFICATION ===');
         
-        if ($user->role === 'dokter' && !$user->is_approved) {
-            \Log::info('=== REDIRECTING DOKTER TO PENDING ===');
-            return redirect()->route('dokter.pending.simple')
-                ->with('success', 'Registrasi berhasil! Akun Anda sedang menunggu persetujuan admin.');
-        }
-        
-        if ($user->role === 'dokter' && $user->is_approved) {
-            \Log::info('=== REDIRECTING APPROVED DOKTER ===');
-            return redirect()->route('dokter.dashboard')->with('success', 'Registrasi berhasil!');
-        }
-        
-        if ($user->role === 'admin') {
-            \Log::info('=== REDIRECTING ADMIN ===');
-            return redirect()->route('admin.dashboard')->with('success', 'Registrasi berhasil!');
-        }
-
-        \Log::warning('=== FALLBACK REDIRECT ===', ['role' => $user->role]);
-        return redirect('/dashboard');
+        // Redirect ke halaman verifikasi email
+        return redirect()->route('verification.notice')
+            ->with('success', 'Registrasi berhasil! Silakan cek email Anda untuk memverifikasi akun.');
     }
 }

@@ -8,217 +8,521 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         body {
-            background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+            background: linear-gradient(135deg, #4a5d4f 0%, #3a4d3f 100%);
             min-height: 100vh;
+            margin: 0;
+            padding: 15px 10px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         
-        .register-page {
-            background: none;
+        .register-container {
+            max-width: 450px;
+            margin: 0 auto;
         }
         
-        .register-box {
-            width: 400px;
-            margin: 7% auto;
-        }
-        
-        .register-logo {
-            background: white;
-            color: #16a34a;
-            border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        .header-section {
             text-align: center;
+            margin-bottom: 20px;
         }
         
-        .register-logo b {
-            font-size: 28px;
-            font-weight: 700;
+        .logo-section {
+            background: white;
+            border-radius: 12px;
+            padding: 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-bottom: 10px;
         }
         
-        .card {
-            border: none;
+        .logo-img {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+        }
+        
+        .logo-text {
+            font-size: 20px;
+            font-weight: 800;
+            margin: 0;
+        }
+        
+        .logo-hi { color: #f4a538; }
+        .logo-law { color: #4a5d4f; }
+        
+        .page-title {
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+            margin: 0 0 5px 0;
+        }
+        
+        .page-subtitle {
+            color: rgba(255,255,255,0.8);
+            font-size: 12px;
+            margin: 0;
+        }
+        
+        .register-card {
+            background: white;
             border-radius: 15px;
+            padding: 25px;
             box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            border: none;
         }
         
-        .card-body {
-            padding: 30px;
-        }
-        
-        .register-box-msg {
-            color: #16a34a;
+        .form-title {
+            color: #4a5d4f;
+            font-size: 16px;
             font-weight: 600;
             text-align: center;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
+        }
+        
+        .info-box {
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            color: #166534;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 15px;
+            font-size: 11px;
+        }
+        
+        .info-box i {
+            color: #16a085;
+            margin-right: 6px;
+        }
+        
+        .verification-info {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 15px;
+            font-size: 11px;
+        }
+        
+        .verification-info i {
+            color: #f4a538;
+            margin-right: 6px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .input-group {
+            margin-bottom: 15px;
         }
         
         .form-control {
-            border: 2px solid #e2e8f0;
+            border: 2px solid #e5e7eb;
             border-radius: 8px;
-            padding: 12px;
+            padding: 10px 12px;
+            font-size: 13px;
+            height: auto;
         }
         
         .form-control:focus {
-            border-color: #16a34a;
-            box-shadow: 0 0 0 0.2rem rgba(22, 163, 74, 0.1);
+            border-color: #f4a538;
+            box-shadow: 0 0 0 0.2rem rgba(244, 165, 56, 0.1);
         }
         
         .input-group-text {
-            background: #f0fdf4;
-            border: 2px solid #e2e8f0;
+            background: #fef3e2;
+            border: 2px solid #e5e7eb;
             border-left: none;
             border-radius: 0 8px 8px 0;
-            color: #16a34a;
+            color: #f4a538;
+            padding: 10px 12px;
         }
         
-        .btn-primary {
-            background: #16a34a;
+        .input-group .form-control {
+            border-right: none;
+            border-radius: 8px 0 0 8px;
+        }
+        
+        .btn-register {
+            background: linear-gradient(135deg, #f4a538, #e6941f);
+            color: white;
             border: none;
             border-radius: 8px;
             padding: 12px;
+            font-size: 13px;
             font-weight: 600;
+            width: 100%;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(244, 165, 56, 0.3);
         }
         
-        .btn-primary:hover {
-            background: #15803d;
+        .btn-register:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(244, 165, 56, 0.4);
+            color: white;
+        }
+        
+        .alert {
+            border-radius: 8px;
+            padding: 10px 12px;
+            margin-bottom: 15px;
+            font-size: 12px;
         }
         
         .alert-success {
             background: #dcfce7;
             border: 1px solid #bbf7d0;
             color: #166534;
-            border-radius: 8px;
         }
         
         .alert-danger {
             background: #fef2f2;
             border: 1px solid #fecaca;
             color: #991b1b;
-            border-radius: 8px;
         }
         
         .invalid-feedback {
             color: #dc2626;
+            font-size: 11px;
             display: block;
+            margin-top: 4px;
         }
         
-        a {
-            color: #16a34a;
+        .links-section {
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #e5e7eb;
+        }
+        
+        .links-section a {
+            color: #4a5d4f;
             text-decoration: none;
+            font-size: 12px;
+            transition: color 0.3s ease;
         }
         
-        a:hover {
-            color: #15803d;
+        .links-section a:hover {
+            color: #f4a538;
             text-decoration: underline;
         }
         
-        .balance-icon {
-            color: #16a34a;
-            margin-right: 8px;
+        .links-section p {
+            margin: 8px 0;
         }
-
-        .register-subtitle {
-            color: #6b7280;
-            font-size: 14px;
-            margin-bottom: 20px;
+        
+        .back-link {
+            text-align: center;
+            margin-top: 15px;
+        }
+        
+        .back-link a {
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            font-size: 11px;
+            transition: color 0.3s ease;
+        }
+        
+        .back-link a:hover {
+            color: white;
+        }
+        
+        .back-link i {
+            margin-right: 5px;
+        }
+        
+        @media (max-width: 576px) {
+            body {
+                padding: 10px 5px;
+            }
+            
+            .register-container {
+                max-width: 100%;
+            }
+            
+            .register-card {
+                padding: 20px;
+            }
+            
+            .logo-img {
+                width: 28px;
+                height: 28px;
+            }
+            
+            .logo-text {
+                font-size: 18px;
+            }
+            
+            .page-title {
+                font-size: 16px;
+            }
+        }
+        
+        @media (max-width: 400px) {
+            .register-card {
+                padding: 15px;
+            }
+            
+            .form-control, .input-group-text {
+                font-size: 12px;
+                padding: 8px 10px;
+            }
         }
     </style>
 </head>
-<body class="hold-transition register-page">
-    <div class="register-box">
-        <div class="register-logo">
-            <i class="fas fa-balance-scale balance-icon"></i>
-            <b>HILAW</b> System
+<body>
+    <div class="register-container">
+        <!-- Header Section -->
+        <div class="header-section">
+            <div class="logo-section">
+                <img src="{{ asset('template/img/hilaw-logo.png') }}" alt="HiLAW Logo" class="logo-img">
+                <h1 class="logo-text">
+                    <span class="logo-hi">Hi</span><span class="logo-law">LAW</span>
+                </h1>
+            </div>
+            <h2 class="page-title">Registrasi Pengguna</h2>
+            <p class="page-subtitle">Bergabung dengan platform konsultasi hukum terpercaya</p>
         </div>
 
-        <div class="card">
-            <div class="card-body register-card-body">
-                <h3 class="register-box-msg">Registrasi Pengguna</h3>
-                <p class="register-subtitle text-center">Silakan daftar untuk konsultasi hukum</p>
+        <!-- Registration Card -->
+        <div class="register-card">
+            <h3 class="form-title">Buat Akun Baru</h3>
 
-                @if (session('success'))
-                    <div class="alert alert-success">{{ session('success') }}</div>
-                @endif
+            <!-- Info Boxes -->
+            <div class="info-box">
+                <i class="fas fa-info-circle"></i>
+                <strong>Info:</strong> Akun akan dibuat dengan pengaturan default. Anda dapat melengkapi profil setelah login dan verifikasi email.
+            </div>
 
-                @if (session('error'))
-                    <div class="alert alert-danger">{{ session('error') }}</div>
-                @endif
+            <div class="verification-info">
+                <i class="fas fa-envelope-circle-check"></i>
+                <strong>Penting:</strong> Setelah registrasi, Anda akan menerima email verifikasi. Silakan cek email dan klik link verifikasi sebelum login.
+            </div>
 
-                <form method="POST" action="{{ route('register') }}">
-                    @csrf
-                    <input type="hidden" name="role" value="pengguna">
+            <!-- Alerts -->
+            @if (session('success'))
+                <div class="alert alert-success">{{ session('success') }}</div>
+            @endif
 
-                    <div class="input-group mb-3">
-                        <input type="text" name="name" class="form-control @error('name') is-invalid @enderror" 
-                               placeholder="Nama Lengkap" value="{{ old('name') }}" required>
-                        <div class="input-group-append">
-                            <div class="input-group-text">
-                                <span class="fas fa-user"></span>
-                            </div>
-                        </div>
-                        @error('name')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
+            @if (session('error'))
+                <div class="alert alert-danger">{{ session('error') }}</div>
+            @endif
 
-                    <div class="input-group mb-3">
-                        <input type="email" name="email" class="form-control @error('email') is-invalid @enderror" 
-                               placeholder="Email" value="{{ old('email') }}" required>
-                        <div class="input-group-append">
-                            <div class="input-group-text">
-                                <span class="fas fa-envelope"></span>
-                            </div>
-                        </div>
-                        @error('email')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
+            <!-- Registration Form -->
+            <form method="POST" action="{{ route('register') }}" id="registerForm">
+                @csrf
 
-                    <div class="input-group mb-3">
-                        <input type="password" name="password" class="form-control @error('password') is-invalid @enderror" 
-                               placeholder="Password (minimal 8 karakter)" required>
-                        <div class="input-group-append">
-                            <div class="input-group-text">
-                                <span class="fas fa-lock"></span>
-                            </div>
-                        </div>
-                        @error('password')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    <div class="input-group mb-3">
-                        <input type="password" name="password_confirmation" class="form-control @error('password_confirmation') is-invalid @enderror" 
-                               placeholder="Konfirmasi Password" required>
-                        <div class="input-group-append">
-                            <div class="input-group-text">
-                                <span class="fas fa-lock"></span>
-                            </div>
-                        </div>
-                        @error('password_confirmation')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    <div class="row">
-                        <div class="col-12">
-                            <button type="submit" class="btn btn-primary btn-block">Daftar Sekarang</button>
+                <!-- Nama Lengkap -->
+                <div class="input-group">
+                    <input type="text" 
+                           name="name" 
+                           class="form-control @error('name') is-invalid @enderror" 
+                           placeholder="Nama Lengkap" 
+                           value="{{ old('name') }}"
+                           required
+                           maxlength="255">
+                    <div class="input-group-append">
+                        <div class="input-group-text">
+                            <i class="fas fa-user"></i>
                         </div>
                     </div>
-                </form>
+                    @error('name')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
 
-                <p class="mb-1 text-center mt-3">
-                    <a href="{{ route('login') }}">Sudah punya akun? Login di sini</a>
+                <!-- Email -->
+                <div class="input-group">
+                    <input type="email" 
+                           name="email" 
+                           class="form-control @error('email') is-invalid @enderror" 
+                           placeholder="Alamat Email" 
+                           value="{{ old('email') }}"
+                           required
+                           maxlength="255">
+                    <div class="input-group-append">
+                        <div class="input-group-text">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                    </div>
+                    @error('email')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <!-- Password -->
+                <div class="input-group">
+                    <input type="password" 
+                           name="password" 
+                           class="form-control @error('password') is-invalid @enderror" 
+                           placeholder="Password (minimal 8 karakter)" 
+                           required
+                           minlength="8">
+                    <div class="input-group-append">
+                        <div class="input-group-text">
+                            <i class="fas fa-lock"></i>
+                        </div>
+                    </div>
+                    @error('password')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <!-- Konfirmasi Password -->
+                <div class="input-group">
+                    <input type="password" 
+                           name="password_confirmation" 
+                           class="form-control @error('password_confirmation') is-invalid @enderror" 
+                           placeholder="Konfirmasi Password" 
+                           required
+                           minlength="8">
+                    <div class="input-group-append">
+                        <div class="input-group-text">
+                            <i class="fas fa-lock"></i>
+                        </div>
+                    </div>
+                    @error('password_confirmation')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="btn-register">
+                    <i class="fas fa-user-plus"></i> Daftar Sekarang
+                </button>
+            </form>
+
+            <!-- Links Section -->
+            <div class="links-section">
+                <p>
+                    <a href="{{ route('login') }}">
+                        <i class="fas fa-sign-in-alt"></i>
+                        Sudah punya akun? Login di sini
+                    </a>
                 </p>
-                <hr>
-                <p class="mb-0 text-center">
-                    <a href="{{ route('register.dokter') }}">Daftar sebagai ahli hukum</a>
+                <p>
+                    <a href="{{ route('register.dokter') }}">
+                        <i class="fas fa-gavel"></i>
+                        Daftar sebagai ahli hukum
+                    </a>
                 </p>
             </div>
         </div>
+
+        <!-- Back Link -->
+        <div class="back-link">
+            <a href="{{ route('register-choice') }}">
+                <i class="fas fa-arrow-left"></i>
+                Kembali ke Pilihan Registrasi
+            </a>
+        </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('registerForm');
+            const nameField = document.querySelector('input[name="name"]');
+            const emailField = document.querySelector('input[name="email"]');
+            const passwordField = document.querySelector('input[name="password"]');
+            const passwordConfirmField = document.querySelector('input[name="password_confirmation"]');
+
+            // Auto-focus pada field nama
+            if (nameField) {
+                nameField.focus();
+            }
+
+            // Email format validation
+            if (emailField) {
+                emailField.addEventListener('input', function() {
+                    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    const errorDiv = document.getElementById('email-error');
+                    
+                    if (!emailPattern.test(emailField.value) && emailField.value !== '') {
+                        emailField.classList.add('is-invalid');
+                        errorDiv.textContent = 'Format email tidak valid';
+                        errorDiv.style.display = 'block';
+                    } else {
+                        emailField.classList.remove('is-invalid');
+                        errorDiv.style.display = 'none';
+                    }
+                });
+            }
+
+            // Password confirmation validation
+            if (passwordField && passwordConfirmField) {
+                function validatePasswordMatch() {
+                    const errorDiv = document.getElementById('password-confirmation-error');
+                    
+                    if (passwordField.value !== passwordConfirmField.value && passwordConfirmField.value !== '') {
+                        passwordConfirmField.classList.add('is-invalid');
+                        errorDiv.textContent = 'Password tidak cocok';
+                        errorDiv.style.display = 'block';
+                        return false;
+                    } else {
+                        passwordConfirmField.classList.remove('is-invalid');
+                        errorDiv.style.display = 'none';
+                        return true;
+                    }
+                }
+
+                passwordConfirmField.addEventListener('input', validatePasswordMatch);
+                passwordField.addEventListener('input', validatePasswordMatch);
+            }
+
+            // Form submission with validation
+            form.addEventListener('submit', function(e) {
+                let isValid = true;
+
+                // Validate email
+                const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailPattern.test(emailField.value)) {
+                    e.preventDefault();
+                    isValid = false;
+                    emailField.classList.add('is-invalid');
+                    document.getElementById('email-error').textContent = 'Format email tidak valid';
+                    document.getElementById('email-error').style.display = 'block';
+                }
+
+                // Validate password match
+                if (passwordField.value !== passwordConfirmField.value) {
+                    e.preventDefault();
+                    isValid = false;
+                    passwordConfirmField.classList.add('is-invalid');
+                    document.getElementById('password-confirmation-error').textContent = 'Password tidak cocok';
+                    document.getElementById('password-confirmation-error').style.display = 'block';
+                }
+
+                // Show loading state if valid
+                if (isValid) {
+                    const submitBtn = form.querySelector('.btn-register');
+                    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Mendaftar...';
+                    submitBtn.disabled = true;
+                }
+            });
+
+            // Animation on load
+            const card = document.querySelector('.register-card');
+            const header = document.querySelector('.header-section');
+            
+            header.style.opacity = '0';
+            header.style.transform = 'translateY(-20px)';
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            
+            setTimeout(() => {
+                header.style.transition = 'all 0.5s ease';
+                header.style.opacity = '1';
+                header.style.transform = 'translateY(0)';
+                
+                setTimeout(() => {
+                    card.style.transition = 'all 0.5s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, 200);
+            }, 100);
+        });
+    </script>
 </body>
 </html>
